@@ -7,169 +7,189 @@
 <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
   :root {
-    --bg: #1e1e2a; --surface: #272736; --surface2: #303044; --border: #38384f;
-    --text-primary: #e8e6f0; --text-secondary: #9e9bb8; --text-muted: #6e6c88;
-    --accent: #7b9fd4;
-    --s1: #e05252; --s2: #e8884a; --s3: #d4b800; --s4: #7dbe5e; --s5: #3ec97a;
-    --radius: 10px;
-    --font-serif: 'Libre Baskerville', Georgia, serif;
-    --font-sans: 'DM Sans', sans-serif;
+    --bg:#1e1e2a; --surface:#272736; --surface2:#303044; --border:#38384f;
+    --text-primary:#e8e6f0; --text-secondary:#9e9bb8; --text-muted:#6e6c88;
+    --accent:#7b9fd4;
+    --s1:#e05252; --s2:#e8884a; --s3:#d4b800; --s4:#7dbe5e; --s5:#3ec97a;
+    --radius:10px;
+    --font-serif:'Libre Baskerville',Georgia,serif;
+    --font-sans:'DM Sans',sans-serif;
   }
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { background: var(--bg); font-family: var(--font-sans); color: var(--text-primary); min-height: 100vh; padding: 32px 24px; }
-  .page { max-width: 1100px; margin: 0 auto; display: flex; flex-direction: column; gap: 24px; }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{background:var(--bg);font-family:var(--font-sans);color:var(--text-primary);min-height:100vh;padding:32px 24px;}
+  .page{max-width:1100px;margin:0 auto;display:flex;flex-direction:column;gap:24px;}
 
   /* Header */
-  .header { padding-bottom: 20px; border-bottom: 1.5px solid var(--border); display: flex; align-items: flex-start; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
-  .header-eyebrow { font-size: 11px; font-weight: 500; letter-spacing: .12em; text-transform: uppercase; color: var(--accent); margin-bottom: 6px; }
-  .header-title { font-family: var(--font-serif); font-size: 22px; font-weight: 700; color: var(--text-primary); line-height: 1.25; }
-  .header-sub { font-size: 13px; color: var(--text-secondary); margin-top: 4px; }
-  .header-btns { display: flex; gap: 8px; flex-wrap: wrap; align-items: flex-start; margin-top: 4px; }
-
-  .btn-outline { display: flex; align-items: center; gap: 7px; font-family: var(--font-sans); font-size: 12px; font-weight: 500; padding: 8px 16px; background: transparent; color: var(--accent); border: 1px solid var(--accent); border-radius: 7px; cursor: pointer; transition: background .15s; white-space: nowrap; }
-  .btn-outline:hover { background: rgba(123,159,212,0.1); }
-  .btn-outline svg { width: 14px; height: 14px; flex-shrink: 0; }
+  .header{padding-bottom:20px;border-bottom:1.5px solid var(--border);display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:12px;}
+  .header-eyebrow{font-size:11px;font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);margin-bottom:6px;}
+  .header-title{font-family:var(--font-serif);font-size:22px;font-weight:700;color:var(--text-primary);line-height:1.25;}
+  .header-sub{font-size:13px;color:var(--text-secondary);margin-top:4px;}
+  .header-btns{display:flex;gap:8px;flex-wrap:wrap;align-items:flex-start;margin-top:4px;}
+  .btn-outline{display:flex;align-items:center;gap:7px;font-family:var(--font-sans);font-size:12px;font-weight:500;padding:8px 16px;background:transparent;color:var(--accent);border:1px solid var(--accent);border-radius:7px;cursor:pointer;transition:background .15s;white-space:nowrap;}
+  .btn-outline:hover{background:rgba(123,159,212,0.1);}
+  .btn-outline svg{width:14px;height:14px;flex-shrink:0;}
 
   /* CSV bar */
-  .csv-bar {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 16px 20px;
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    flex-wrap: wrap;
-  }
-  .csv-bar-label { font-size: 12px; font-weight: 500; color: var(--text-secondary); white-space: nowrap; }
+  .csv-bar{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px 20px;display:flex;align-items:center;gap:14px;flex-wrap:wrap;}
+  .csv-bar-label{font-size:12px;font-weight:500;color:var(--text-secondary);white-space:nowrap;}
+  .drop-zone{flex:1;min-width:200px;border:1.5px dashed var(--border);border-radius:8px;padding:10px 16px;display:flex;align-items:center;gap:10px;cursor:pointer;transition:border-color .15s,background .15s;font-size:12px;color:var(--text-muted);}
+  .drop-zone:hover,.drop-zone.drag-over{border-color:var(--accent);background:rgba(123,159,212,0.06);color:var(--text-secondary);}
+  .drop-zone svg{width:16px;height:16px;flex-shrink:0;opacity:.6;}
+  .drop-zone input[type=file]{display:none;}
+  .drop-zone.loaded{border-color:var(--s5);color:var(--s5);}
+  .btn-template{display:flex;align-items:center;gap:6px;font-family:var(--font-sans);font-size:11px;font-weight:500;padding:7px 12px;background:transparent;color:var(--text-muted);border:1px solid var(--border);border-radius:7px;cursor:pointer;white-space:nowrap;transition:color .15s,border-color .15s;}
+  .btn-template:hover{color:var(--text-secondary);border-color:var(--text-secondary);}
+  .btn-template svg{width:13px;height:13px;}
+  .csv-error{font-size:11px;color:var(--s1);width:100%;display:none;}
+  .csv-error.visible{display:block;}
 
-  .drop-zone {
-    flex: 1; min-width: 200px;
-    border: 1.5px dashed var(--border);
-    border-radius: 8px;
-    padding: 10px 16px;
-    display: flex; align-items: center; gap: 10px;
-    cursor: pointer;
-    transition: border-color .15s, background .15s;
-    font-size: 12px; color: var(--text-muted);
-  }
-  .drop-zone:hover, .drop-zone.drag-over { border-color: var(--accent); background: rgba(123,159,212,0.06); color: var(--text-secondary); }
-  .drop-zone svg { width: 16px; height: 16px; flex-shrink: 0; opacity: .6; }
-  .drop-zone input[type=file] { display: none; }
-  .drop-zone.loaded { border-color: var(--s5); color: var(--s5); }
+  /* View mode tabs */
+  .view-tabs{display:none;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:6px;gap:6px;}
+  .view-tabs.visible{display:flex;}
+  .view-tab{flex:1;font-family:var(--font-sans);font-size:12px;font-weight:500;padding:9px 12px;background:transparent;color:var(--text-muted);border:none;border-radius:7px;cursor:pointer;transition:background .15s,color .15s;text-align:center;}
+  .view-tab:hover{color:var(--text-secondary);}
+  .view-tab.active{background:var(--surface2);color:var(--text-primary);}
 
-  .docent-selector { display: none; flex: 1; min-width: 200px; flex-direction: column; gap: 5px; }
-  .docent-selector.visible { display: flex; }
-  .docent-selector label { font-size: 10px; font-weight: 500; letter-spacing: .06em; text-transform: uppercase; color: var(--text-muted); }
-  .docent-select-input { font-family: var(--font-sans); font-size: 13px; border: 1px solid var(--border); border-radius: 6px; padding: 7px 10px; background: var(--surface2); color: var(--text-primary); outline: none; width: 100%; cursor: pointer; }
-  .docent-select-input:focus { border-color: var(--accent); }
+  /* Group selector */
+  .group-selector-bar{display:none;gap:12px;align-items:flex-end;flex-wrap:wrap;}
+  .group-selector-bar.visible{display:flex;}
+  .group-sel-field{display:flex;flex-direction:column;gap:4px;min-width:220px;}
+  .group-sel-field label{font-size:10.5px;font-weight:500;letter-spacing:.06em;text-transform:uppercase;color:var(--text-muted);}
+  .group-sel-input{font-family:var(--font-sans);font-size:13px;border:1px solid var(--border);border-radius:6px;padding:7px 10px;background:var(--surface);color:var(--text-primary);outline:none;cursor:pointer;}
+  .group-sel-input:focus{border-color:var(--accent);}
 
-  .btn-template { display: flex; align-items: center; gap: 6px; font-family: var(--font-sans); font-size: 11px; font-weight: 500; padding: 7px 12px; background: transparent; color: var(--text-muted); border: 1px solid var(--border); border-radius: 7px; cursor: pointer; white-space: nowrap; transition: color .15s, border-color .15s; }
-  .btn-template:hover { color: var(--text-secondary); border-color: var(--text-secondary); }
-  .btn-template svg { width: 13px; height: 13px; }
-
-  .csv-error { font-size: 11px; color: var(--s1); margin-top: 4px; display: none; }
-  .csv-error.visible { display: block; }
+  /* Group context banner */
+  .group-banner{display:none;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:14px 20px;gap:16px;flex-wrap:wrap;align-items:center;}
+  .group-banner.visible{display:flex;}
+  .group-banner-title{font-size:14px;font-weight:500;color:var(--text-primary);}
+  .group-banner-sub{font-size:12px;color:var(--text-muted);margin-top:2px;}
+  .group-stat{display:flex;flex-direction:column;align-items:center;gap:2px;padding:0 16px;border-left:1px solid var(--border);}
+  .group-stat-val{font-size:20px;font-weight:700;color:var(--accent);}
+  .group-stat-lbl{font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.05em;}
 
   /* Meta */
-  .meta-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; }
-  .meta-field { display: flex; flex-direction: column; gap: 4px; }
-  .meta-field label { font-size: 10.5px; font-weight: 500; letter-spacing: .06em; text-transform: uppercase; color: var(--text-muted); }
-  .meta-field input { font-family: var(--font-sans); font-size: 13px; border: 1px solid var(--border); border-radius: 6px; padding: 7px 10px; background: var(--surface); color: var(--text-primary); outline: none; transition: border-color .15s; }
-  .meta-field input:focus { border-color: var(--accent); }
+  .meta-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;}
+  .meta-field{display:flex;flex-direction:column;gap:4px;}
+  .meta-field label{font-size:10.5px;font-weight:500;letter-spacing:.06em;text-transform:uppercase;color:var(--text-muted);}
+  .meta-field input{font-family:var(--font-sans);font-size:13px;border:1px solid var(--border);border-radius:6px;padding:7px 10px;background:var(--surface);color:var(--text-primary);outline:none;transition:border-color .15s;}
+  .meta-field input:focus{border-color:var(--accent);}
+
+  /* Individual docent selector inside csv bar */
+  .docent-selector{display:none;flex:1;min-width:200px;flex-direction:column;gap:5px;}
+  .docent-selector.visible{display:flex;}
+  .docent-selector label{font-size:10px;font-weight:500;letter-spacing:.06em;text-transform:uppercase;color:var(--text-muted);}
+  .docent-select-input{font-family:var(--font-sans);font-size:13px;border:1px solid var(--border);border-radius:6px;padding:7px 10px;background:var(--surface2);color:var(--text-primary);outline:none;width:100%;cursor:pointer;}
 
   /* Wheel */
-  .wheel-section { display: flex; flex-direction: column; align-items: center; gap: 14px; }
-  canvas { display: block; width: 620px; height: 620px; }
-  .legend { display: flex; gap: 16px; flex-wrap: wrap; justify-content: center; }
-  .legend-item { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--text-secondary); }
-  .legend-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+  .wheel-section{display:flex;flex-direction:column;align-items:center;gap:14px;}
+  canvas{display:block;width:620px;height:620px;}
+  .legend{display:flex;gap:16px;flex-wrap:wrap;justify-content:center;}
+  .legend-item{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--text-secondary);}
+  .legend-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;}
 
   /* Score section */
-  .score-section { display: flex; flex-direction: column; gap: 20px; }
-  .score-section-title { font-size: 11px; font-weight: 500; letter-spacing: .08em; text-transform: uppercase; color: var(--text-muted); }
-  .fundamento-group { display: flex; flex-direction: column; gap: 10px; }
-  .fundamento-header { display: flex; align-items: center; gap: 12px; padding: 11px 16px; border-radius: 8px; border-left: 3px solid; }
-  .fundamento-header.pedagogico  { background: rgba(122,175,212,0.09); border-color: #7aafd4; }
-  .fundamento-header.tecnologico { background: rgba(212,176,64,0.09);  border-color: #d4b040; }
-  .fundamento-header.profesional { background: rgba(232,136,184,0.09); border-color: #e888b8; }
-  .fundamento-icon { font-size: 15px; }
-  .fundamento-title { font-size: 12px; font-weight: 500; color: var(--text-primary); }
-  .score-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
-  @media (max-width: 860px) { .score-grid { grid-template-columns: repeat(2, 1fr); } canvas { width: 100%; height: auto; } }
-  @media (max-width: 560px) { .score-grid { grid-template-columns: 1fr; } }
-  .comp-block { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; }
-  .comp-header { display: flex; align-items: flex-start; gap: 8px; padding: 9px 12px; background: var(--surface2); border-bottom: 1px solid var(--border); min-height: 44px; }
-  .comp-dot { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; margin-top: 3px; }
-  .comp-name { font-size: 11.5px; font-weight: 500; color: var(--text-primary); line-height: 1.35; }
-  .desemp-rows { display: flex; }
-  .desemp-cell { flex: 1; display: flex; flex-direction: column; align-items: center; padding: 10px 4px 12px; gap: 5px; border-right: 1px solid var(--border); }
-  .desemp-cell:last-child { border-right: none; }
-  .desemp-label { font-size: 9.5px; color: var(--text-muted); font-weight: 500; letter-spacing: .03em; text-align: center; line-height: 1.3; }
-  .score-select { font-family: var(--font-sans); font-size: 18px; font-weight: 500; width: 52px; text-align: center; border: 1.5px solid var(--border); border-radius: 7px; padding: 4px 2px; background: var(--surface); color: var(--text-primary); cursor: pointer; transition: border-color .15s, color .15s; appearance: none; -webkit-appearance: none; outline: none; }
-  .score-select:focus { border-color: var(--accent); }
+  .score-section{display:flex;flex-direction:column;gap:20px;}
+  .score-section-title{font-size:11px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:var(--text-muted);}
+  .fundamento-group{display:flex;flex-direction:column;gap:10px;}
+  .fundamento-header{display:flex;align-items:center;gap:12px;padding:11px 16px;border-radius:8px;border-left:3px solid;}
+  .fundamento-header.pedagogico{background:rgba(122,175,212,0.09);border-color:#7aafd4;}
+  .fundamento-header.tecnologico{background:rgba(212,176,64,0.09);border-color:#d4b040;}
+  .fundamento-header.profesional{background:rgba(232,136,184,0.09);border-color:#e888b8;}
+  .fundamento-icon{font-size:15px;}
+  .fundamento-title{font-size:12px;font-weight:500;color:var(--text-primary);}
+  .score-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;}
+  @media(max-width:860px){.score-grid{grid-template-columns:repeat(2,1fr);}canvas{width:100%;height:auto;}}
+  @media(max-width:560px){.score-grid{grid-template-columns:1fr;}}
+  .comp-block{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;}
+  .comp-header{display:flex;align-items:flex-start;gap:8px;padding:9px 12px;background:var(--surface2);border-bottom:1px solid var(--border);min-height:44px;}
+  .comp-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0;margin-top:3px;}
+  .comp-name{font-size:11.5px;font-weight:500;color:var(--text-primary);line-height:1.35;}
+  .desemp-rows{display:flex;}
+  .desemp-cell{flex:1;display:flex;flex-direction:column;align-items:center;padding:10px 4px 12px;gap:5px;border-right:1px solid var(--border);}
+  .desemp-cell:last-child{border-right:none;}
+  .desemp-label{font-size:9.5px;color:var(--text-muted);font-weight:500;letter-spacing:.03em;text-align:center;line-height:1.3;}
+  .score-select{font-family:var(--font-sans);font-size:18px;font-weight:500;width:52px;text-align:center;border:1.5px solid var(--border);border-radius:7px;padding:4px 2px;background:var(--surface);color:var(--text-primary);cursor:pointer;transition:border-color .15s,color .15s;appearance:none;-webkit-appearance:none;outline:none;}
+  .score-select:focus{border-color:var(--accent);}
+  /* Read-only score display for group averages */
+  .score-display{font-size:18px;font-weight:700;width:52px;height:36px;display:flex;align-items:center;justify-content:center;border-radius:7px;border:1.5px solid var(--border);}
+
+  /* Summary table */
+  .summary-section{display:flex;flex-direction:column;gap:12px;}
+  .summary-title{font-size:11px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:var(--text-muted);}
+  .summary-table-wrap{overflow-x:auto;}
+  .summary-table{width:100%;border-collapse:collapse;font-size:12px;}
+  .summary-table th{font-size:10.5px;font-weight:500;color:var(--text-muted);text-align:left;padding:8px 10px;border-bottom:1px solid var(--border);white-space:nowrap;}
+  .summary-table th.center{text-align:center;}
+  .summary-table td{padding:8px 10px;border-bottom:0.5px solid var(--border);color:var(--text-secondary);vertical-align:middle;}
+  .summary-table tr:hover td{background:rgba(255,255,255,0.02);}
+  .summary-table td.name{color:var(--text-primary);font-weight:500;}
+  .score-badge{display:inline-flex;align-items:center;justify-content:center;width:26px;height:22px;border-radius:5px;font-weight:700;font-size:12px;color:#fff;}
+  .avg-badge{display:inline-flex;align-items:center;justify-content:center;min-width:32px;padding:2px 6px;border-radius:5px;font-weight:700;font-size:12px;color:#fff;}
 
   /* Footer */
-  .footer { padding-top: 16px; border-top: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
-  .footer-note { font-size: 11px; color: var(--text-muted); font-style: italic; }
-  .btn-print { font-family: var(--font-sans); font-size: 12px; font-weight: 500; padding: 8px 20px; background: var(--accent); color: #fff; border: none; border-radius: 7px; cursor: pointer; letter-spacing: .03em; transition: opacity .15s; }
-  .btn-print:hover { opacity: .85; }
+  .footer{padding-top:16px;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;}
+  .footer-note{font-size:11px;color:var(--text-muted);font-style:italic;}
+  .btn-print{font-family:var(--font-sans);font-size:12px;font-weight:500;padding:8px 20px;background:var(--accent);color:#fff;border:none;border-radius:7px;cursor:pointer;letter-spacing:.03em;transition:opacity .15s;}
+  .btn-print:hover{opacity:.85;}
 
   /* Modal */
-  .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(10,10,18,0.78); z-index: 100; align-items: center; justify-content: center; padding: 24px; }
-  .modal-overlay.open { display: flex; }
-  .modal { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; max-width: 680px; width: 100%; max-height: 85vh; overflow-y: auto; padding: 28px 32px; position: relative; }
-  .modal-close { position: absolute; top: 16px; right: 18px; background: none; border: none; color: var(--text-muted); font-size: 22px; cursor: pointer; line-height: 1; transition: color .15s; }
-  .modal-close:hover { color: var(--text-primary); }
-  .modal h2 { font-family: var(--font-serif); font-size: 18px; font-weight: 700; margin-bottom: 6px; color: var(--text-primary); }
-  .modal .modal-sub { font-size: 12px; color: var(--text-muted); margin-bottom: 20px; }
-  .modal h3 { font-size: 12px; font-weight: 500; letter-spacing: .08em; text-transform: uppercase; color: var(--accent); margin: 20px 0 8px; }
-  .modal p { font-size: 13px; color: var(--text-secondary); line-height: 1.7; margin-bottom: 8px; }
-  .modal ul { padding-left: 18px; margin-bottom: 8px; }
-  .modal li { font-size: 13px; color: var(--text-secondary); line-height: 1.7; }
-  .scale-table { width: 100%; border-collapse: collapse; margin: 4px 0 12px; font-size: 12px; }
-  .scale-table th { text-align: left; padding: 6px 10px; font-weight: 500; color: var(--text-muted); font-size: 11px; letter-spacing: .05em; text-transform: uppercase; border-bottom: 1px solid var(--border); }
-  .scale-table td { padding: 8px 10px; border-bottom: 0.5px solid var(--border); color: var(--text-secondary); vertical-align: top; line-height: 1.5; }
-  .score-pill { display: inline-flex; align-items: center; justify-content: center; width: 22px; height: 22px; border-radius: 50%; font-weight: 700; font-size: 12px; color: #fff; flex-shrink: 0; }
-  .comp-legend-row { display: flex; align-items: center; gap: 10px; padding: 7px 0; border-bottom: 0.5px solid var(--border); }
-  .comp-legend-row:last-child { border-bottom: none; }
-  .comp-legend-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
-  .comp-legend-name { font-size: 12px; color: var(--text-primary); font-weight: 500; flex: 1; }
-  .comp-legend-desc { font-size: 11px; color: var(--text-muted); flex: 2; line-height: 1.4; }
-  .diagram-wrap { background: var(--surface2); border-radius: 8px; padding: 16px; margin: 4px 0 12px; }
-  .diagram-wrap p { font-size: 12px; color: var(--text-secondary); line-height: 1.6; }
-  .diagram-note { font-size: 11px; color: var(--text-muted); margin-top: 6px; }
-  .modal-group-label { font-size: 11px; font-weight: 500; letter-spacing: .06em; text-transform: uppercase; color: var(--text-muted); margin: 14px 0 4px; padding-left: 2px; }
-  .csv-columns { background: var(--surface2); border-radius: 8px; padding: 12px 16px; margin: 4px 0 8px; font-size: 11px; color: var(--text-muted); line-height: 2; font-family: monospace; }
-  .csv-columns strong { color: var(--text-secondary); }
+  .modal-overlay{display:none;position:fixed;inset:0;background:rgba(10,10,18,0.78);z-index:100;align-items:center;justify-content:center;padding:24px;}
+  .modal-overlay.open{display:flex;}
+  .modal{background:var(--surface);border:1px solid var(--border);border-radius:14px;max-width:680px;width:100%;max-height:85vh;overflow-y:auto;padding:28px 32px;position:relative;}
+  .modal-close{position:absolute;top:16px;right:18px;background:none;border:none;color:var(--text-muted);font-size:22px;cursor:pointer;line-height:1;transition:color .15s;}
+  .modal-close:hover{color:var(--text-primary);}
+  .modal h2{font-family:var(--font-serif);font-size:18px;font-weight:700;margin-bottom:6px;color:var(--text-primary);}
+  .modal .modal-sub{font-size:12px;color:var(--text-muted);margin-bottom:20px;}
+  .modal h3{font-size:12px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);margin:20px 0 8px;}
+  .modal p{font-size:13px;color:var(--text-secondary);line-height:1.7;margin-bottom:8px;}
+  .modal ul{padding-left:18px;margin-bottom:8px;}
+  .modal li{font-size:13px;color:var(--text-secondary);line-height:1.7;}
+  .scale-table{width:100%;border-collapse:collapse;margin:4px 0 12px;font-size:12px;}
+  .scale-table th{text-align:left;padding:6px 10px;font-weight:500;color:var(--text-muted);font-size:11px;letter-spacing:.05em;text-transform:uppercase;border-bottom:1px solid var(--border);}
+  .scale-table td{padding:8px 10px;border-bottom:0.5px solid var(--border);color:var(--text-secondary);vertical-align:top;line-height:1.5;}
+  .score-pill{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:50%;font-weight:700;font-size:12px;color:#fff;flex-shrink:0;}
+  .comp-legend-row{display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:0.5px solid var(--border);}
+  .comp-legend-row:last-child{border-bottom:none;}
+  .comp-legend-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;}
+  .comp-legend-name{font-size:12px;color:var(--text-primary);font-weight:500;flex:1;}
+  .comp-legend-desc{font-size:11px;color:var(--text-muted);flex:2;line-height:1.4;}
+  .diagram-wrap{background:var(--surface2);border-radius:8px;padding:16px;margin:4px 0 12px;}
+  .diagram-wrap p{font-size:12px;color:var(--text-secondary);line-height:1.6;}
+  .diagram-note{font-size:11px;color:var(--text-muted);margin-top:6px;}
+  .modal-group-label{font-size:11px;font-weight:500;letter-spacing:.06em;text-transform:uppercase;color:var(--text-muted);margin:14px 0 4px;padding-left:2px;}
+  .csv-columns{background:var(--surface2);border-radius:8px;padding:12px 16px;margin:4px 0 8px;font-size:11px;color:var(--text-muted);line-height:2;font-family:monospace;}
+  .csv-columns strong{color:var(--text-secondary);}
 
   @media print {
-    @page { margin: 16mm 14mm; size: A4 portrait; }
-    body { background: #1e1e2a !important; padding: 0; -webkit-print-color-adjust: exact; print-color-adjust: exact; color-adjust: exact; font-size: 12px; }
-    .btn-print, .btn-outline, .modal-overlay, .csv-bar { display: none !important; }
-    .page { max-width: 100%; gap: 14px; }
-    .header { padding-bottom: 12px; }
-    .header-title { font-size: 18px; }
-    .meta-grid { grid-template-columns: repeat(3, 1fr); gap: 8px; }
-    .meta-field input { padding: 5px 8px; font-size: 11px; }
-    .meta-field label { font-size: 9px; }
-    .wheel-section { page-break-inside: avoid; break-inside: avoid; }
-    canvas { width: 460px !important; height: 460px !important; }
-    .legend { gap: 10px; }
-    .legend-item { font-size: 10px; }
-    .score-section { gap: 12px; }
-    .fundamento-group { page-break-inside: avoid; break-inside: avoid; }
-    .fundamento-header { padding: 8px 12px; }
-    .fundamento-title { font-size: 11px; }
-    .score-grid { grid-template-columns: repeat(3, 1fr); gap: 8px; }
-    .comp-block { page-break-inside: avoid; break-inside: avoid; }
-    .comp-header { padding: 7px 10px; min-height: 36px; }
-    .comp-name { font-size: 10.5px; }
-    .desemp-cell { padding: 7px 3px 9px; }
-    .desemp-label { font-size: 8.5px; }
-    .score-select { font-size: 15px; width: 44px; }
-    .footer { padding-top: 10px; }
-    .footer-note { font-size: 10px; }
+    @page{margin:16mm 14mm;size:A4 portrait;}
+    body{background:#1e1e2a !important;padding:0;-webkit-print-color-adjust:exact;print-color-adjust:exact;color-adjust:exact;font-size:12px;}
+    .btn-print,.btn-outline,.modal-overlay,.csv-bar,.view-tabs,.group-selector-bar{display:none !important;}
+    .page{max-width:100%;gap:14px;}
+    .header{padding-bottom:12px;}
+    .header-title{font-size:18px;}
+    .meta-grid{grid-template-columns:repeat(3,1fr);gap:8px;}
+    .meta-field input{padding:5px 8px;font-size:11px;}
+    .meta-field label{font-size:9px;}
+    .wheel-section{page-break-inside:avoid;break-inside:avoid;}
+    canvas{width:460px !important;height:460px !important;}
+    .legend{gap:10px;}
+    .legend-item{font-size:10px;}
+    .score-section{gap:12px;}
+    .fundamento-group{page-break-inside:avoid;break-inside:avoid;}
+    .fundamento-header{padding:8px 12px;}
+    .fundamento-title{font-size:11px;}
+    .score-grid{grid-template-columns:repeat(3,1fr);gap:8px;}
+    .comp-block{page-break-inside:avoid;break-inside:avoid;}
+    .comp-header{padding:7px 10px;min-height:36px;}
+    .comp-name{font-size:10.5px;}
+    .desemp-cell{padding:7px 3px 9px;}
+    .desemp-label{font-size:8.5px;}
+    .score-select,.score-display{font-size:15px;width:44px;}
+    .footer{padding-top:10px;}
+    .footer-note{font-size:10px;}
+    .summary-table{font-size:10px;}
+    .summary-table th,.summary-table td{padding:5px 7px;}
+    .group-banner{display:flex !important;}
   }
 </style>
 </head>
@@ -181,13 +201,12 @@
     <button class="modal-close" onclick="document.getElementById('modal-overlay').classList.remove('open')">&#215;</button>
     <h2>Como usar la Rueda de Competencias</h2>
     <div class="modal-sub">Marco de Competencias en Didacticas Mediadas por Tecnologias Digitales</div>
-
-    <h3>Opciones de ingreso de datos</h3>
-    <p><strong style="color:var(--text-primary)">Modo manual:</strong> Complete los campos directamente en pantalla. Ideal para evaluar un docente a la vez en tiempo real.</p>
-    <p><strong style="color:var(--text-primary)">Modo CSV:</strong> Cargue un archivo CSV con uno o varios docentes. Use el boton <em>Descargar plantilla CSV</em> para obtener el formato correcto, completelo en Excel o Google Sheets, exportelo como CSV y arrastrelo a la zona de carga.</p>
-
+    <h3>Tres modos de visualizacion</h3>
+    <p><strong style="color:var(--text-primary)">Docente individual:</strong> Muestra la rueda y puntajes de un solo docente. Puede llenarse manualmente o cargando un CSV.</p>
+    <p><strong style="color:var(--text-primary)">Por programa:</strong> Agrupa todos los docentes del mismo programa academico, calcula el promedio simple y muestra la rueda de promedio mas una tabla con los puntajes individuales.</p>
+    <p><strong style="color:var(--text-primary)">Por facultad:</strong> Igual que por programa pero agrupando por facultad.</p>
     <h3>Formato del CSV</h3>
-    <p>El archivo debe tener exactamente estas columnas en este orden:</p>
+    <p>Use el boton <em>Descargar plantilla CSV</em> para obtener el archivo con los encabezados correctos. Las columnas de puntaje son:</p>
     <div class="csv-columns">
       <strong>nombre</strong>, programa, facultad, periodo, fecha, evaluador,<br>
       pedagogia_innovacion, pedagogia_integracion, pedagogia_exploracion,<br>
@@ -198,14 +217,11 @@
       etica_innovacion, etica_integracion, etica_exploracion,<br>
       desarrollo_innovacion, desarrollo_integracion, desarrollo_exploracion
     </div>
-    <p>Los puntajes deben ser numeros enteros del 1 al 5. Cada fila es un docente. Use el boton <em>Descargar plantilla CSV</em> para obtener el archivo con los encabezados correctos ya escritos.</p>
-
     <h3>Lectura del grafico</h3>
     <div class="diagram-wrap">
-      <p>La rueda se lee desde el centro hacia afuera. <strong style="color:var(--s5)">Un puntaje alto (5)</strong> mantiene el segmento concentrado cerca del centro — indica dominio consolidado. <strong style="color:var(--s1)">Un puntaje bajo (1)</strong> extiende el segmento hasta el borde exterior en rojo — senala una alerta o area critica.</p>
-      <p class="diagram-note">Entre mas llena se vea la rueda desde afuera y mas roja, mas critico es el perfil. Una rueda verde y concentrada al centro indica un perfil docente solido.</p>
+      <p>La rueda se lee desde el centro hacia afuera. <strong style="color:var(--s5)">Puntaje alto (5)</strong> = segmento concentrado al centro en verde. <strong style="color:var(--s1)">Puntaje bajo (1)</strong> = segmento extendido al borde en rojo.</p>
+      <p class="diagram-note">En vistas de grupo, los valores mostrados son promedios redondeados al decimal mas cercano.</p>
     </div>
-
     <h3>Escala de valoracion</h3>
     <table class="scale-table">
       <thead><tr><th>Nivel</th><th>Nombre</th><th>Significado</th></tr></thead>
@@ -214,23 +230,22 @@
         <tr><td><span class="score-pill" style="background:var(--s2)">2</span></td><td>Explorador</td><td>Aplica de forma basica o esporadica con apoyo institucional.</td></tr>
         <tr><td><span class="score-pill" style="background:var(--s3)">3</span></td><td>Integrador</td><td>Integra de forma regular y coherente con objetivos pedagogicos.</td></tr>
         <tr><td><span class="score-pill" style="background:var(--s4)">4</span></td><td>Innovador</td><td>Aplica con autonomia, innovando y adaptando a su contexto.</td></tr>
-        <tr><td><span class="score-pill" style="background:var(--s5)">5</span></td><td>Lider</td><td>Lidera la practica institucional, comparte y documenta experiencias.</td></tr>
+        <tr><td><span class="score-pill" style="background:var(--s5)">5</span></td><td>Lider</td><td>Lidera la practica institucional, comparte y documenta.</td></tr>
       </tbody>
     </table>
-
-    <h3>Las siete dimensiones por fundamento</h3>
-    <div class="modal-group-label">Fundamentos pedagogicos y didacticos</div>
+    <h3>Dimensiones por fundamento</h3>
+    <div class="modal-group-label">Pedagogicos y didacticos</div>
     <div style="margin-bottom:10px">
       <div class="comp-legend-row"><span class="comp-legend-dot" style="background:#7aafd4"></span><span class="comp-legend-name">Pedagogia con Uso TIC</span><span class="comp-legend-desc">Principios pedagogicos en entornos digitales</span></div>
-      <div class="comp-legend-row"><span class="comp-legend-dot" style="background:#5ec4a0"></span><span class="comp-legend-name">Didactica Disciplinar TIC</span><span class="comp-legend-desc">Traduccion de saberes disciplinares mediante tecnologia</span></div>
+      <div class="comp-legend-row"><span class="comp-legend-dot" style="background:#5ec4a0"></span><span class="comp-legend-name">Didactica Disciplinar TIC</span><span class="comp-legend-desc">Traduccion de saberes mediante tecnologia</span></div>
       <div class="comp-legend-row"><span class="comp-legend-dot" style="background:#8dc87a"></span><span class="comp-legend-name">Diseno de Experiencias</span><span class="comp-legend-desc">Planificacion de experiencias educativas digitales</span></div>
     </div>
-    <div class="modal-group-label">Fundamentos tecnologicos y del aprendizaje</div>
+    <div class="modal-group-label">Tecnologicos y del aprendizaje</div>
     <div style="margin-bottom:10px">
-      <div class="comp-legend-row"><span class="comp-legend-dot" style="background:#d4b040"></span><span class="comp-legend-name">Competencia Tecnologica</span><span class="comp-legend-desc">Gestion de herramientas, plataformas y recursos digitales</span></div>
+      <div class="comp-legend-row"><span class="comp-legend-dot" style="background:#d4b040"></span><span class="comp-legend-name">Competencia Tecnologica</span><span class="comp-legend-desc">Gestion de herramientas y plataformas digitales</span></div>
       <div class="comp-legend-row"><span class="comp-legend-dot" style="background:#a888d0"></span><span class="comp-legend-name">Evaluacion del Aprendizaje</span><span class="comp-legend-desc">Estrategias evaluativas en entornos digitales</span></div>
     </div>
-    <div class="modal-group-label">Fundamentos para el desarrollo profesional</div>
+    <div class="modal-group-label">Desarrollo profesional</div>
     <div style="margin-bottom:10px">
       <div class="comp-legend-row"><span class="comp-legend-dot" style="background:#e888b8"></span><span class="comp-legend-name">Etica Digital</span><span class="comp-legend-desc">Docencia responsable, critica e inclusiva</span></div>
       <div class="comp-legend-row"><span class="comp-legend-dot" style="background:#f4a0d0"></span><span class="comp-legend-name">Desarrollo Profesional Docente</span><span class="comp-legend-desc">Reflexion, formacion e innovacion educativa</span></div>
@@ -258,7 +273,6 @@
   <!-- CSV Bar -->
   <div class="csv-bar">
     <span class="csv-bar-label">Cargar datos:</span>
-
     <div class="drop-zone" id="drop-zone" onclick="document.getElementById('csv-input').click()"
          ondragover="event.preventDefault();this.classList.add('drag-over')"
          ondragleave="this.classList.remove('drag-over')"
@@ -269,26 +283,64 @@
       <span id="drop-label">Arrastra un CSV aqui o haz clic para buscar</span>
       <input type="file" id="csv-input" accept=".csv" onchange="handleFile(this.files[0])">
     </div>
-
-    <div class="docent-selector" id="docent-selector">
-      <label>Seleccionar docente</label>
-      <select class="docent-select-input" id="docent-select" onchange="loadDocent(this.value)">
-        <option value="">-- Elige un docente --</option>
-      </select>
-    </div>
-
     <button class="btn-template" onclick="downloadTemplate()">
       <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
         <path d="M3 2h7l3 3v9H3V2z"/><path d="M10 2v3h3"/><path d="M8 7v5M6 10l2 2 2-2"/>
       </svg>
       Descargar plantilla CSV
     </button>
-
     <div class="csv-error" id="csv-error"></div>
   </div>
 
+  <!-- View mode tabs (visible after CSV load) -->
+  <div class="view-tabs" id="view-tabs">
+    <button class="view-tab active" id="tab-individual" onclick="setView('individual')">
+      &#128100; Docente individual
+    </button>
+    <button class="view-tab" id="tab-programa" onclick="setView('programa')">
+      &#128218; Por programa academico
+    </button>
+    <button class="view-tab" id="tab-facultad" onclick="setView('facultad')">
+      &#127979; Por facultad
+    </button>
+  </div>
+
+  <!-- Individual selector (inside page, shown in individual mode) -->
+  <div class="docent-selector" id="docent-selector">
+    <label>Seleccionar docente</label>
+    <select class="docent-select-input" id="docent-select" onchange="loadDocent(this.value)">
+      <option value="">-- Elige un docente --</option>
+    </select>
+  </div>
+
+  <!-- Group selector (shown in programa/facultad mode) -->
+  <div class="group-selector-bar" id="group-selector-bar">
+    <div class="group-sel-field">
+      <label id="group-sel-label">Seleccionar programa</label>
+      <select class="group-sel-input" id="group-select" onchange="loadGroup(this.value)">
+        <option value="">-- Elige una opcion --</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- Group context banner -->
+  <div class="group-banner" id="group-banner">
+    <div style="flex:1">
+      <div class="group-banner-title" id="group-banner-title">—</div>
+      <div class="group-banner-sub" id="group-banner-sub">Promedio del grupo</div>
+    </div>
+    <div class="group-stat">
+      <div class="group-stat-val" id="group-stat-count">0</div>
+      <div class="group-stat-lbl">Docentes</div>
+    </div>
+    <div class="group-stat">
+      <div class="group-stat-val" id="group-stat-avg">—</div>
+      <div class="group-stat-lbl">Promedio global</div>
+    </div>
+  </div>
+
   <!-- Meta fields -->
-  <div class="meta-grid">
+  <div class="meta-grid" id="meta-grid">
     <div class="meta-field"><label>Nombre del docente</label><input type="text" id="f-nombre" placeholder="Nombre completo" oninput="draw()"></div>
     <div class="meta-field"><label>Programa academico</label><input type="text" id="f-programa" placeholder="Ej. Ingenieria de Sistemas"></div>
     <div class="meta-field"><label>Facultad</label><input type="text" id="f-facultad" placeholder="Ej. Facultad de Ciencias"></div>
@@ -309,10 +361,18 @@
     </div>
   </div>
 
-  <!-- Score section -->
+  <!-- Score section (individual puntajes or group averages) -->
   <div class="score-section">
-    <div class="score-section-title">Puntajes por dimension y desempeno</div>
+    <div class="score-section-title" id="score-section-title">Puntajes por dimension y desempeno</div>
     <div id="score-blocks"></div>
+  </div>
+
+  <!-- Summary table (group views only) -->
+  <div class="summary-section" id="summary-section" style="display:none">
+    <div class="summary-title">Detalle por docente</div>
+    <div class="summary-table-wrap">
+      <table class="summary-table" id="summary-table"></table>
+    </div>
   </div>
 
   <!-- Footer -->
@@ -324,24 +384,21 @@
 </div>
 
 <script>
-// ── Data ──────────────────────────────────────────────────────────────────
+// ── Constants ─────────────────────────────────────────────────────────────
 const DIMENSIONS = [
-  { name: "Pedagogia con Uso TIC",      color: "#7aafd4", key: "ped" },
-  { name: "Didactica Disciplinar TIC",  color: "#5ec4a0", key: "did" },
-  { name: "Diseno de Experiencias",     color: "#8dc87a", key: "dis" },
-  { name: "Competencia Tecnologica",    color: "#d4b040", key: "tec" },
-  { name: "Evaluacion del Aprendizaje", color: "#a888d0", key: "eva" },
-  { name: "Etica Digital",              color: "#e888b8", key: "eti" },
-  { name: "Desarrollo Profesional",     color: "#f4a0d0", key: "des" }
+  { name: "Pedagogia con Uso TIC",      color: "#7aafd4" },
+  { name: "Didactica Disciplinar TIC",  color: "#5ec4a0" },
+  { name: "Diseno de Experiencias",     color: "#8dc87a" },
+  { name: "Competencia Tecnologica",    color: "#d4b040" },
+  { name: "Evaluacion del Aprendizaje", color: "#a888d0" },
+  { name: "Etica Digital",              color: "#e888b8" },
+  { name: "Desarrollo Profesional",     color: "#f4a0d0" }
 ];
-
-const GROUPS = [
-  { key: "pedagogico",  icon: "&#127979;", title: "Fundamentos pedagogicos y didacticos del aprendizaje", dims: [0,1,2] },
-  { key: "tecnologico", icon: "&#128187;", title: "Fundamentos tecnologicos y del aprendizaje",           dims: [3,4]   },
-  { key: "profesional", icon: "&#127891;", title: "Fundamentos para el desarrollo profesional",           dims: [5,6]   }
+const GROUPS_DEF = [
+  { key:"pedagogico",  icon:"&#127979;", title:"Fundamentos pedagogicos y didacticos del aprendizaje", dims:[0,1,2] },
+  { key:"tecnologico", icon:"&#128187;", title:"Fundamentos tecnologicos y del aprendizaje",           dims:[3,4]   },
+  { key:"profesional", icon:"&#127891;", title:"Fundamentos para el desarrollo profesional",           dims:[5,6]   }
 ];
-
-// CSV column order — nombres descriptivos para el usuario
 const CSV_SCORE_COLS = [
   "pedagogia_innovacion","pedagogia_integracion","pedagogia_exploracion",
   "didactica_innovacion","didactica_integracion","didactica_exploracion",
@@ -351,8 +408,6 @@ const CSV_SCORE_COLS = [
   "etica_innovacion","etica_integracion","etica_exploracion",
   "desarrollo_innovacion","desarrollo_integracion","desarrollo_exploracion"
 ];
-
-// Mapeo dimension + desempeno a columna CSV
 const CSV_COL_MAP = [
   ["pedagogia_innovacion","pedagogia_integracion","pedagogia_exploracion"],
   ["didactica_innovacion","didactica_integracion","didactica_exploracion"],
@@ -362,331 +417,386 @@ const CSV_COL_MAP = [
   ["etica_innovacion","etica_integracion","etica_exploracion"],
   ["desarrollo_innovacion","desarrollo_integracion","desarrollo_exploracion"]
 ];
-
+const LABEL_NAMES = ["Innovacion","Integracion","Exploracion"];
 const SCORE_COLORS = ["","#e05252","#e8884a","#d4b800","#7dbe5e","#3ec97a"];
-const LABEL_NAMES  = ["Innovacion","Integracion","Exploracion"];
 const D = 3;
-const scores = DIMENSIONS.map(function(){ return [3,3,3]; });
+const N = DIMENSIONS.length;
 
-let csvData = []; // parsed rows from CSV
+// ── State ─────────────────────────────────────────────────────────────────
+var scores = DIMENSIONS.map(function(){ return [3,3,3]; });
+var csvData = [];
+var currentView = 'individual'; // 'individual' | 'programa' | 'facultad'
+var groupMode = false; // true when showing averages
 
-function scoreColor(v){ return SCORE_COLORS[v] || "#888"; }
-function scoreFrac(v){ return 1 - ((v-1)/4)*0.86; }
+function scoreColor(v){
+  var c = Math.round(v);
+  return SCORE_COLORS[Math.min(5,Math.max(1,c))] || "#888";
+}
+function scoreFrac(v){ return 1-((v-1)/4)*0.86; }
+
+// ── View switching ────────────────────────────────────────────────────────
+function setView(mode){
+  currentView = mode;
+  ['individual','programa','facultad'].forEach(function(m){
+    document.getElementById('tab-'+m).classList.toggle('active', m===mode);
+  });
+
+  var isSingle = mode === 'individual';
+  groupMode = !isSingle;
+
+  // Show/hide individual selector
+  document.getElementById('docent-selector').classList.toggle('visible', isSingle);
+
+  // Show/hide group selector
+  var gsBar = document.getElementById('group-selector-bar');
+  gsBar.classList.toggle('visible', !isSingle);
+  document.getElementById('group-sel-label').textContent =
+    mode === 'programa' ? 'Seleccionar programa academico' : 'Seleccionar facultad';
+
+  // Reset group selector options
+  populateGroupSelect(mode);
+
+  // Hide group banner and summary until selection
+  document.getElementById('group-banner').classList.remove('visible');
+  document.getElementById('summary-section').style.display = 'none';
+
+  // Meta grid: hide in group mode
+  document.getElementById('meta-grid').style.display = isSingle ? '' : 'none';
+
+  // Score section title
+  document.getElementById('score-section-title').textContent =
+    isSingle ? 'Puntajes por dimension y desempeno' : 'Promedio del grupo por dimension';
+
+  if(isSingle){
+    // Restore individual scores to UI
+    resetScores();
+    buildBlocks(false);
+  } else {
+    // Reset wheel and cards
+    resetScores();
+    buildBlocks(true);
+    draw();
+  }
+}
+
+function populateGroupSelect(mode){
+  var sel = document.getElementById('group-select');
+  sel.innerHTML = '<option value="">-- Elige una opcion --</option>';
+  if(!csvData.length) return;
+  var key = mode === 'programa' ? 'programa' : 'facultad';
+  var seen = {};
+  csvData.forEach(function(row){
+    var v = (row[key]||'').trim();
+    if(v && !seen[v]){ seen[v]=true; }
+  });
+  Object.keys(seen).sort().forEach(function(v){
+    var opt = document.createElement('option');
+    opt.value = v; opt.textContent = v;
+    sel.appendChild(opt);
+  });
+}
+
+function loadGroup(value){
+  if(!value) return;
+  var key = currentView === 'programa' ? 'programa' : 'facultad';
+  var rows = csvData.filter(function(r){ return (r[key]||'').trim() === value; });
+  if(!rows.length) return;
+
+  // Compute averages
+  for(var ci=0;ci<N;ci++){
+    for(var di=0;di<D;di++){
+      var col = CSV_COL_MAP[ci][di];
+      var sum = 0;
+      rows.forEach(function(r){ sum += parseFloat(r[col])||3; });
+      scores[ci][di] = sum/rows.length;
+    }
+  }
+
+  // Global average
+  var allVals = [];
+  for(var ci2=0;ci2<N;ci2++) for(var di2=0;di2<D;di2++) allVals.push(scores[ci2][di2]);
+  var globalAvg = allVals.reduce(function(a,b){return a+b;},0)/allVals.length;
+
+  // Banner
+  document.getElementById('group-banner-title').textContent = value;
+  document.getElementById('group-banner-sub').textContent =
+    currentView === 'programa' ? 'Programa academico — promedio del grupo' : 'Facultad — promedio del grupo';
+  document.getElementById('group-stat-count').textContent = rows.length;
+  document.getElementById('group-stat-avg').textContent = globalAvg.toFixed(1);
+  document.getElementById('group-banner').classList.add('visible');
+
+  // Update score display
+  buildBlocks(true);
+  draw();
+
+  // Build summary table
+  buildSummaryTable(rows);
+  document.getElementById('summary-section').style.display = '';
+}
 
 // ── CSV Handling ──────────────────────────────────────────────────────────
 function handleDrop(e){
   e.preventDefault();
   document.getElementById('drop-zone').classList.remove('drag-over');
-  var file = e.dataTransfer.files[0];
-  if(file) handleFile(file);
+  var f = e.dataTransfer.files[0]; if(f) handleFile(f);
 }
-
 function handleFile(file){
-  if(!file || !file.name.endsWith('.csv')){
-    showCsvError("El archivo debe ser un .csv");
-    return;
-  }
+  if(!file||!file.name.endsWith('.csv')){ showCsvError("El archivo debe ser .csv"); return; }
   var reader = new FileReader();
   reader.onload = function(e){ parseCSV(e.target.result, file.name); };
-  reader.readAsText(file, 'UTF-8');
+  reader.readAsText(file,'UTF-8');
 }
-
 function parseCSV(text, filename){
-  var errEl = document.getElementById('csv-error');
-  errEl.classList.remove('visible');
-
-  // Normalize line endings
-  var lines = text.replace(/\r\n/g,'\n').replace(/\r/g,'\n').split('\n').filter(function(l){ return l.trim(); });
-  if(lines.length < 2){ showCsvError("El CSV debe tener encabezado y al menos una fila de datos."); return; }
-
-  var headers = lines[0].split(',').map(function(h){ return h.trim().toLowerCase().replace(/['"]/g,''); });
-
-  // Check required score columns exist
-  var missing = CSV_SCORE_COLS.filter(function(c){ return headers.indexOf(c) === -1; });
-  if(missing.length > 0){ showCsvError("Faltan columnas: " + missing.slice(0,4).join(', ') + (missing.length>4?' y otras...':'')); return; }
-
+  document.getElementById('csv-error').classList.remove('visible');
+  var lines = text.replace(/\r\n/g,'\n').replace(/\r/g,'\n').split('\n').filter(function(l){return l.trim();});
+  if(lines.length<2){ showCsvError("El CSV debe tener encabezado y al menos una fila."); return; }
+  var headers = lines[0].split(',').map(function(h){return h.trim().toLowerCase().replace(/['"]/g,'');});
+  var missing = CSV_SCORE_COLS.filter(function(c){return headers.indexOf(c)===-1;});
+  if(missing.length){ showCsvError("Faltan columnas: "+missing.slice(0,3).join(', ')+(missing.length>3?' y otras...':'')); return; }
   csvData = [];
-  for(var i = 1; i < lines.length; i++){
+  for(var i=1;i<lines.length;i++){
     var vals = splitCSVLine(lines[i]);
-    if(vals.length < headers.length) continue;
+    if(vals.length<headers.length) continue;
     var row = {};
-    headers.forEach(function(h,idx){ row[h] = vals[idx] ? vals[idx].trim().replace(/^["']|["']$/g,'') : ''; });
+    headers.forEach(function(h,idx){ row[h]=(vals[idx]||'').trim().replace(/^["']|["']$/g,''); });
     csvData.push(row);
   }
+  if(!csvData.length){ showCsvError("No se encontraron filas validas."); return; }
 
-  if(csvData.length === 0){ showCsvError("No se encontraron filas validas en el CSV."); return; }
+  // Update drop zone
+  document.getElementById('drop-zone').classList.add('loaded');
+  document.getElementById('drop-label').textContent =
+    filename+" ("+csvData.length+" docente"+(csvData.length>1?"s":"")+" cargado"+(csvData.length>1?"s":"")+")";
 
-  // Update drop zone UI
-  var dz = document.getElementById('drop-zone');
-  dz.classList.add('loaded');
-  document.getElementById('drop-label').textContent = filename + " (" + csvData.length + " docente" + (csvData.length>1?"s":"") + " cargado" + (csvData.length>1?"s":"") + ")";
+  // Show tabs
+  document.getElementById('view-tabs').classList.add('visible');
 
-  // Populate selector
+  // Populate individual selector
   var sel = document.getElementById('docent-select');
   sel.innerHTML = '<option value="">-- Elige un docente --</option>';
-  csvData.forEach(function(row, idx){
+  csvData.forEach(function(row,idx){
     var opt = document.createElement('option');
-    opt.value = idx;
-    opt.textContent = (row['nombre'] || ('Docente ' + (idx+1)));
+    opt.value=idx; opt.textContent=(row['nombre']||'Docente '+(idx+1));
     sel.appendChild(opt);
   });
   document.getElementById('docent-selector').classList.add('visible');
 
-  // Auto-load if only one row
-  if(csvData.length === 1){
-    sel.value = 0;
-    loadDocent(0);
-  }
+  if(csvData.length===1){ sel.value=0; loadDocent(0); }
 }
-
 function splitCSVLine(line){
-  var result = [], cur = '', inQuote = false;
-  for(var i = 0; i < line.length; i++){
-    var ch = line[i];
-    if(ch === '"'){ inQuote = !inQuote; }
-    else if(ch === ',' && !inQuote){ result.push(cur); cur = ''; }
-    else { cur += ch; }
+  var result=[],cur='',inQ=false;
+  for(var i=0;i<line.length;i++){
+    var ch=line[i];
+    if(ch==='"'){inQ=!inQ;}
+    else if(ch===','&&!inQ){result.push(cur);cur='';}
+    else{cur+=ch;}
   }
-  result.push(cur);
-  return result;
+  result.push(cur); return result;
 }
-
 function loadDocent(idx){
-  if(idx === '' || idx === null || idx === undefined) return;
-  var row = csvData[+idx];
-  if(!row) return;
-
-  // Fill meta fields
-  setField('f-nombre',    row['nombre']    || '');
-  setField('f-programa',  row['programa']  || '');
-  setField('f-facultad',  row['facultad']  || '');
-  setField('f-periodo',   row['periodo']   || '');
-  setField('f-fecha',     row['fecha']     || '');
-  setField('f-evaluador', row['evaluador'] || '');
-
-  // Fill scores
-  var flatIdx = 0;
-  DIMENSIONS.forEach(function(dim, ci){
-    for(var di = 0; di < D; di++){
-      var col = CSV_COL_MAP[ci][di];
-      var v = parseInt(row[col], 10);
-      if(isNaN(v) || v < 1 || v > 5) v = 3;
-      scores[ci][di] = v;
-      var sel = document.getElementById('s' + ci + '_' + di);
-      if(sel){
-        sel.value = v;
-        sel.style.color = scoreColor(v);
-        sel.style.borderColor = scoreColor(v);
-      }
-      flatIdx++;
+  if(idx===''||idx===null||idx===undefined) return;
+  var row=csvData[+idx]; if(!row) return;
+  setField('f-nombre',   row['nombre']   ||'');
+  setField('f-programa', row['programa'] ||'');
+  setField('f-facultad', row['facultad'] ||'');
+  setField('f-periodo',  row['periodo']  ||'');
+  setField('f-fecha',    row['fecha']    ||'');
+  setField('f-evaluador',row['evaluador']||'');
+  for(var ci=0;ci<N;ci++){
+    for(var di=0;di<D;di++){
+      var v=parseInt(row[CSV_COL_MAP[ci][di]],10);
+      if(isNaN(v)||v<1||v>5) v=3;
+      scores[ci][di]=v;
+      var sel=document.getElementById('s'+ci+'_'+di);
+      if(sel){ sel.value=v; sel.style.color=scoreColor(v); sel.style.borderColor=scoreColor(v); }
     }
-  });
-
+  }
   draw();
 }
+function setField(id,val){ var el=document.getElementById(id); if(el) el.value=val; }
+function showCsvError(msg){ var el=document.getElementById('csv-error'); el.textContent=msg; el.classList.add('visible'); }
+function resetScores(){ scores=DIMENSIONS.map(function(){return [3,3,3];}); }
 
-function setField(id, val){
-  var el = document.getElementById(id);
-  if(el) el.value = val;
-}
-
-function showCsvError(msg){
-  var el = document.getElementById('csv-error');
-  el.textContent = msg;
-  el.classList.add('visible');
-}
-
-// ── Template download ─────────────────────────────────────────────────────
 function downloadTemplate(){
-  var header = "nombre,programa,facultad,periodo,fecha,evaluador," + CSV_SCORE_COLS.join(',');
-  var example = "Juan Garcia,Ingenieria de Sistemas,Facultad de Ciencias,2025-1,2025-04-01,Ana Lopez," + Array(21).fill(3).join(',');
-  var csv = header + "\n" + example + "\n";
-  var blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-  var url = URL.createObjectURL(blob);
-  var a = document.createElement('a');
-  a.href = url; a.download = 'plantilla_rueda_competencias.csv';
-  a.click();
+  var header="nombre,programa,facultad,periodo,fecha,evaluador,"+CSV_SCORE_COLS.join(',');
+  var example="Juan Garcia,Ingenieria de Sistemas,Facultad de Ciencias,2025-1,2025-04-01,Ana Lopez,"+Array(21).fill(3).join(',');
+  var blob=new Blob([header+"\n"+example+"\n"],{type:'text/csv;charset=utf-8;'});
+  var url=URL.createObjectURL(blob);
+  var a=document.createElement('a'); a.href=url; a.download='plantilla_rueda_competencias.csv'; a.click();
   URL.revokeObjectURL(url);
 }
 
 // ── Build score cards ─────────────────────────────────────────────────────
-function buildCard(ci){
-  var dim = DIMENSIONS[ci];
-  var block = document.createElement('div');
-  block.className = 'comp-block';
-
-  var hdr = document.createElement('div');
-  hdr.className = 'comp-header';
-  hdr.innerHTML = '<span class="comp-dot" style="background:' + dim.color + '"></span><span class="comp-name">' + dim.name + '</span>';
+function buildCard(ci, readOnly){
+  var dim=DIMENSIONS[ci];
+  var block=document.createElement('div'); block.className='comp-block';
+  var hdr=document.createElement('div'); hdr.className='comp-header';
+  hdr.innerHTML='<span class="comp-dot" style="background:'+dim.color+'"></span><span class="comp-name">'+dim.name+'</span>';
   block.appendChild(hdr);
-
-  var rows = document.createElement('div');
-  rows.className = 'desemp-rows';
-
-  for(var di = 0; di < D; di++){
-    var cell = document.createElement('div');
-    cell.className = 'desemp-cell';
-
-    var lbl = document.createElement('div');
-    lbl.className = 'desemp-label';
-    lbl.textContent = LABEL_NAMES[di];
-
-    var sel = document.createElement('select');
-    sel.className = 'score-select';
-    sel.id = 's' + ci + '_' + di;
-    for(var v = 1; v <= 5; v++){
-      var opt = document.createElement('option');
-      opt.value = v; opt.textContent = v;
-      if(v === scores[ci][di]) opt.selected = true;
-      sel.appendChild(opt);
-    }
-    sel.style.color = '#e8e6f0';
-    sel.style.borderColor = '#38384f';
-
-    ;(function(ci2, di2){
-      sel.addEventListener('change', function(){
-        var v2 = +this.value;
-        scores[ci2][di2] = v2;
-        this.style.color = scoreColor(v2);
-        this.style.borderColor = scoreColor(v2);
-        draw();
-      });
-    })(ci, di);
-
+  var rows=document.createElement('div'); rows.className='desemp-rows';
+  for(var di=0;di<D;di++){
+    var cell=document.createElement('div'); cell.className='desemp-cell';
+    var lbl=document.createElement('div'); lbl.className='desemp-label'; lbl.textContent=LABEL_NAMES[di];
     cell.appendChild(lbl);
-    cell.appendChild(sel);
+    if(readOnly){
+      var disp=document.createElement('div');
+      disp.className='score-display'; disp.id='sd'+ci+'_'+di;
+      var v=scores[ci][di];
+      var rounded=Math.round(v*10)/10;
+      disp.textContent=Number.isInteger(rounded)?rounded:rounded.toFixed(1);
+      disp.style.color=scoreColor(v); disp.style.borderColor=scoreColor(v);
+      cell.appendChild(disp);
+    } else {
+      var sel=document.createElement('select'); sel.className='score-select'; sel.id='s'+ci+'_'+di;
+      for(var v2=1;v2<=5;v2++){
+        var opt=document.createElement('option'); opt.value=v2; opt.textContent=v2;
+        if(v2===scores[ci][di]) opt.selected=true; sel.appendChild(opt);
+      }
+      sel.style.color='#e8e6f0'; sel.style.borderColor='#38384f';
+      ;(function(ci2,di2){ sel.addEventListener('change',function(){ var v3=+this.value; scores[ci2][di2]=v3; this.style.color=scoreColor(v3); this.style.borderColor=scoreColor(v3); draw(); }); })(ci,di);
+      cell.appendChild(sel);
+    }
     rows.appendChild(cell);
   }
-  block.appendChild(rows);
-  return block;
+  block.appendChild(rows); return block;
 }
 
-function buildBlocks(){
-  var container = document.getElementById('score-blocks');
-  container.innerHTML = '';
-  GROUPS.forEach(function(group){
-    var wrapper = document.createElement('div');
-    wrapper.className = 'fundamento-group';
-
-    var hdr = document.createElement('div');
-    hdr.className = 'fundamento-header ' + group.key;
-    hdr.innerHTML = '<span class="fundamento-icon">' + group.icon + '</span><span class="fundamento-title">' + group.title + '</span>';
+function buildBlocks(readOnly){
+  var container=document.getElementById('score-blocks'); container.innerHTML='';
+  GROUPS_DEF.forEach(function(group){
+    var wrapper=document.createElement('div'); wrapper.className='fundamento-group';
+    var hdr=document.createElement('div'); hdr.className='fundamento-header '+group.key;
+    hdr.innerHTML='<span class="fundamento-icon">'+group.icon+'</span><span class="fundamento-title">'+group.title+'</span>';
     wrapper.appendChild(hdr);
-
-    var grid = document.createElement('div');
-    grid.className = 'score-grid';
-    group.dims.forEach(function(ci){ grid.appendChild(buildCard(ci)); });
-    wrapper.appendChild(grid);
-
-    container.appendChild(wrapper);
+    var grid=document.createElement('div'); grid.className='score-grid';
+    group.dims.forEach(function(ci){ grid.appendChild(buildCard(ci,readOnly)); });
+    wrapper.appendChild(grid); container.appendChild(wrapper);
   });
+}
+
+// ── Summary table for group views ─────────────────────────────────────────
+function buildSummaryTable(rows){
+  var table=document.getElementById('summary-table');
+  var dimNames=DIMENSIONS.map(function(d){return d.name;});
+
+  // Build header
+  var thead='<thead><tr><th>Docente</th>';
+  dimNames.forEach(function(n){ thead+='<th class="center" style="font-size:9.5px">'+n+'</th>'; });
+  thead+='<th class="center">Prom.</th></tr></thead>';
+
+  var tbody='<tbody>';
+  rows.forEach(function(row){
+    tbody+='<tr><td class="name">'+(row['nombre']||'—')+'</td>';
+    var rowAvg=0, count=0;
+    for(var ci=0;ci<N;ci++){
+      var dimAvg=0;
+      for(var di=0;di<D;di++){ dimAvg+=parseFloat(row[CSV_COL_MAP[ci][di]])||3; }
+      dimAvg=dimAvg/D; rowAvg+=dimAvg; count++;
+      var rounded=Math.round(dimAvg*10)/10;
+      var disp=Number.isInteger(rounded)?rounded:rounded.toFixed(1);
+      tbody+='<td class="center"><span class="avg-badge" style="background:'+scoreColor(dimAvg)+'">'+disp+'</span></td>';
+    }
+    var globalAvg=rowAvg/count;
+    var gDisp=(Math.round(globalAvg*10)/10);
+    tbody+='<td class="center"><span class="avg-badge" style="background:'+scoreColor(globalAvg)+';font-size:13px">'+gDisp+'</span></td>';
+    tbody+='</tr>';
+  });
+  tbody+='</tbody>';
+  table.innerHTML=thead+tbody;
 }
 
 // ── Draw wheel ────────────────────────────────────────────────────────────
 function draw(){
-  var canvas = document.getElementById('c');
-  var ctx = canvas.getContext('2d');
-  var W = canvas.width, H = canvas.height;
+  var canvas=document.getElementById('c');
+  var ctx=canvas.getContext('2d');
+  var W=canvas.width,H=canvas.height;
   ctx.clearRect(0,0,W,H);
-  var cx = W/2, cy = H/2;
-  var R = 225, innerR = 22;
-  var N = DIMENSIONS.length;
-  var sliceAngle = (Math.PI*2)/(N*D);
-  var startAngle = -Math.PI/2;
+  var cx=W/2,cy=H/2,R=225,innerR=22;
+  var sliceAngle=(Math.PI*2)/(N*D);
+  var startAngle=-Math.PI/2;
 
-  ctx.beginPath(); ctx.arc(cx,cy,R+2,0,Math.PI*2); ctx.fillStyle='#272736'; ctx.fill();
-
-  for(var g = 1; g <= 5; g++){
-    var r = innerR+(R-innerR)*(g/5);
-    ctx.beginPath(); ctx.arc(cx,cy,r,0,Math.PI*2);
-    ctx.strokeStyle = g===5 ? 'rgba(224,82,82,0.22)' : 'rgba(255,255,255,0.06)';
-    ctx.lineWidth = g===5 ? 1.5 : 0.5; ctx.stroke();
+  ctx.beginPath();ctx.arc(cx,cy,R+2,0,Math.PI*2);ctx.fillStyle='#272736';ctx.fill();
+  for(var g=1;g<=5;g++){
+    var r=innerR+(R-innerR)*(g/5);
+    ctx.beginPath();ctx.arc(cx,cy,r,0,Math.PI*2);
+    ctx.strokeStyle=g===5?'rgba(224,82,82,0.22)':'rgba(255,255,255,0.06)';
+    ctx.lineWidth=g===5?1.5:0.5;ctx.stroke();
   }
 
-  for(var ci = 0; ci < N; ci++){
-    for(var di = 0; di < D; di++){
-      var si = ci*D+di;
-      var a1 = startAngle+si*sliceAngle;
-      var a2 = a1+sliceAngle;
-      var v = scores[ci][di];
-      var outerR = innerR+(R-innerR)*scoreFrac(v);
-
-      ctx.beginPath(); ctx.moveTo(cx,cy); ctx.arc(cx,cy,outerR,a1,a2); ctx.closePath();
-      ctx.fillStyle = scoreColor(v); ctx.globalAlpha = 0.8; ctx.fill(); ctx.globalAlpha = 1;
-
+  for(var ci=0;ci<N;ci++){
+    for(var di=0;di<D;di++){
+      var si=ci*D+di;
+      var a1=startAngle+si*sliceAngle,a2=a1+sliceAngle;
+      var v=scores[ci][di];
+      var outerR=innerR+(R-innerR)*scoreFrac(v);
+      ctx.beginPath();ctx.moveTo(cx,cy);ctx.arc(cx,cy,outerR,a1,a2);ctx.closePath();
+      ctx.fillStyle=scoreColor(v);ctx.globalAlpha=0.8;ctx.fill();ctx.globalAlpha=1;
       ctx.beginPath();
-      ctx.moveTo(cx+Math.cos(a1)*innerR, cy+Math.sin(a1)*innerR);
+      ctx.moveTo(cx+Math.cos(a1)*innerR,cy+Math.sin(a1)*innerR);
       ctx.arc(cx,cy,outerR,a1,a2);
-      ctx.lineTo(cx+Math.cos(a2)*innerR, cy+Math.sin(a2)*innerR);
-      ctx.arc(cx,cy,innerR,a2,a1,true); ctx.closePath();
-      ctx.strokeStyle = 'rgba(255,255,255,0.5)'; ctx.lineWidth = 0.7; ctx.stroke();
-
-      var midA = a1+sliceAngle/2;
-      var lr = innerR+(R-innerR)*scoreFrac(v)*0.52;
-      ctx.save();
-      ctx.translate(cx+Math.cos(midA)*lr, cy+Math.sin(midA)*lr);
-      ctx.rotate(midA+Math.PI/2);
-      ctx.font = '500 10px "DM Sans",sans-serif';
-      ctx.fillStyle = 'rgba(255,255,255,0.92)'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-      ctx.fillText('D'+(di+1),0,0);
-      ctx.restore();
+      ctx.lineTo(cx+Math.cos(a2)*innerR,cy+Math.sin(a2)*innerR);
+      ctx.arc(cx,cy,innerR,a2,a1,true);ctx.closePath();
+      ctx.strokeStyle='rgba(255,255,255,0.5)';ctx.lineWidth=0.7;ctx.stroke();
+      var midA=a1+sliceAngle/2;
+      var lr=innerR+(R-innerR)*scoreFrac(v)*0.52;
+      ctx.save();ctx.translate(cx+Math.cos(midA)*lr,cy+Math.sin(midA)*lr);
+      ctx.rotate(midA+Math.PI/2);ctx.font='500 10px "DM Sans",sans-serif';
+      ctx.fillStyle='rgba(255,255,255,0.92)';ctx.textAlign='center';ctx.textBaseline='middle';
+      ctx.fillText('D'+(di+1),0,0);ctx.restore();
     }
+    var a1c=startAngle+ci*D*sliceAngle;
+    ctx.beginPath();ctx.moveTo(cx+Math.cos(a1c)*innerR,cy+Math.sin(a1c)*innerR);
+    ctx.lineTo(cx+Math.cos(a1c)*(R+4),cy+Math.sin(a1c)*(R+4));
+    ctx.strokeStyle='rgba(255,255,255,0.14)';ctx.lineWidth=1.5;ctx.stroke();
 
-    var a1c = startAngle+ci*D*sliceAngle;
-    ctx.beginPath();
-    ctx.moveTo(cx+Math.cos(a1c)*innerR, cy+Math.sin(a1c)*innerR);
-    ctx.lineTo(cx+Math.cos(a1c)*(R+4), cy+Math.sin(a1c)*(R+4));
-    ctx.strokeStyle = 'rgba(255,255,255,0.14)'; ctx.lineWidth = 1.5; ctx.stroke();
-
-    var midA2 = startAngle+(ci*D+D/2)*sliceAngle;
-    var lx = cx+Math.cos(midA2)*(R+38);
-    var ly = cy+Math.sin(midA2)*(R+38);
-    ctx.save();
-    ctx.translate(lx,ly);
-    var normA = ((midA2%(Math.PI*2))+Math.PI*2)%(Math.PI*2);
-    var rot = (normA <= Math.PI/2 || normA >= Math.PI*1.5) ? midA2-Math.PI/2 : midA2+Math.PI/2;
-    ctx.rotate(rot);
-    ctx.font = '500 11px "DM Sans",sans-serif';
-    ctx.fillStyle = '#c8c6e0'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-    var words = DIMENSIONS[ci].name.split(' ');
-    var lines = []; var cur = '';
+    var midA2=startAngle+(ci*D+D/2)*sliceAngle;
+    var lx=cx+Math.cos(midA2)*(R+38),ly=cy+Math.sin(midA2)*(R+38);
+    ctx.save();ctx.translate(lx,ly);
+    var normA=((midA2%(Math.PI*2))+Math.PI*2)%(Math.PI*2);
+    var rot=(normA<=Math.PI/2||normA>=Math.PI*1.5)?midA2-Math.PI/2:midA2+Math.PI/2;
+    ctx.rotate(rot);ctx.font='500 11px "DM Sans",sans-serif';
+    ctx.fillStyle='#c8c6e0';ctx.textAlign='center';ctx.textBaseline='middle';
+    var words=DIMENSIONS[ci].name.split(' '),lines=[],cur='';
     words.forEach(function(w){
-      if((cur+' '+w).trim().length > 13 && cur){ lines.push(cur); cur = w; }
-      else cur = (cur+' '+w).trim();
+      if((cur+' '+w).trim().length>13&&cur){lines.push(cur);cur=w;}
+      else cur=(cur+' '+w).trim();
     });
-    if(cur) lines.push(cur);
-    var lh = 13, off = -(lines.length-1)*lh/2;
-    lines.forEach(function(ln,i){ ctx.fillText(ln,0,off+i*lh); });
+    if(cur)lines.push(cur);
+    var lh=13,off=-(lines.length-1)*lh/2;
+    lines.forEach(function(ln,i){ctx.fillText(ln,0,off+i*lh);});
     ctx.restore();
   }
 
-  ctx.beginPath(); ctx.arc(cx,cy,innerR,0,Math.PI*2);
-  ctx.fillStyle = '#1e1e2a'; ctx.fill();
-  ctx.strokeStyle = 'rgba(255,255,255,0.08)'; ctx.lineWidth = 1; ctx.stroke();
+  ctx.beginPath();ctx.arc(cx,cy,innerR,0,Math.PI*2);
+  ctx.fillStyle='#1e1e2a';ctx.fill();
+  ctx.strokeStyle='rgba(255,255,255,0.08)';ctx.lineWidth=1;ctx.stroke();
 
-  var nombre = document.getElementById('f-nombre').value.trim();
-  if(nombre){
-    ctx.font = '500 10px "DM Sans",sans-serif'; ctx.fillStyle = '#9e9bb8';
-    ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-    ctx.fillText(nombre.split(' ')[0],cx,cy);
+  // Center label
+  var centerLabel = groupMode
+    ? document.getElementById('group-select').value
+    : (document.getElementById('f-nombre').value.trim().split(' ')[0]||'');
+  if(centerLabel){
+    ctx.font='500 10px "DM Sans",sans-serif';ctx.fillStyle='#9e9bb8';
+    ctx.textAlign='center';ctx.textBaseline='middle';
+    ctx.fillText(centerLabel.slice(0,12),cx,cy);
   }
 
-  ctx.font = '9px "DM Sans",sans-serif'; ctx.fillStyle = 'rgba(255,255,255,0.28)';
-  ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
-  for(var v2 = 1; v2 <= 5; v2++){
-    var rr = innerR+(R-innerR)*scoreFrac(v2);
+  ctx.font='9px "DM Sans",sans-serif';ctx.fillStyle='rgba(255,255,255,0.28)';
+  ctx.textAlign='left';ctx.textBaseline='middle';
+  for(var v2=1;v2<=5;v2++){
+    var rr=innerR+(R-innerR)*scoreFrac(v2);
     ctx.fillText(v2,cx+3,cy-rr);
   }
 }
 
 function closeModal(e){
-  if(e.target === document.getElementById('modal-overlay')){
+  if(e.target===document.getElementById('modal-overlay'))
     document.getElementById('modal-overlay').classList.remove('open');
-  }
 }
 
-document.getElementById('f-fecha').value = new Date().toISOString().split('T')[0];
-buildBlocks();
+// ── Init ──────────────────────────────────────────────────────────────────
+document.getElementById('f-fecha').value=new Date().toISOString().split('T')[0];
+buildBlocks(false);
 draw();
 </script>
 </body>
