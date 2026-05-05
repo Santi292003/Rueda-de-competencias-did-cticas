@@ -43,20 +43,19 @@
   .csv-error{font-size:11px;color:var(--s1);width:100%;display:none;}
   .csv-error.visible{display:block;}
 
-  /* View mode tabs */
-  .view-tabs{display:none;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:6px;gap:6px;}
-  .view-tabs.visible{display:flex;}
-  .view-tab{flex:1;font-family:var(--font-sans);font-size:12px;font-weight:500;padding:9px 12px;background:transparent;color:var(--text-muted);border:none;border-radius:7px;cursor:pointer;transition:background .15s,color .15s;text-align:center;}
-  .view-tab:hover{color:var(--text-secondary);}
-  .view-tab.active{background:var(--surface2);color:var(--text-primary);}
-
-  /* Group selector */
-  .group-selector-bar{display:none;gap:12px;align-items:flex-end;flex-wrap:wrap;}
-  .group-selector-bar.visible{display:flex;}
-  .group-sel-field{display:flex;flex-direction:column;gap:4px;min-width:220px;}
-  .group-sel-field label{font-size:10.5px;font-weight:500;letter-spacing:.06em;text-transform:uppercase;color:var(--text-muted);}
-  .group-sel-input{font-family:var(--font-sans);font-size:13px;border:1px solid var(--border);border-radius:6px;padding:7px 10px;background:var(--surface);color:var(--text-primary);outline:none;cursor:pointer;}
-  .group-sel-input:focus{border-color:var(--accent);}
+  /* Cascade selectors */
+  .cascade-bar{display:none;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px 20px;gap:12px;align-items:flex-end;flex-wrap:wrap;}
+  .cascade-bar.visible{display:flex;}
+  .cascade-step{display:flex;flex-direction:column;gap:6px;flex:1;min-width:200px;}
+  .cascade-step-header{display:flex;align-items:center;gap:8px;}
+  .cascade-step-num{display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;border-radius:50%;background:var(--accent);color:#fff;font-size:11px;font-weight:700;flex-shrink:0;}
+  .cascade-locked .cascade-step-num{background:var(--border);}
+  .cascade-step-label{font-size:10.5px;font-weight:500;letter-spacing:.06em;text-transform:uppercase;color:var(--text-muted);}
+  .cascade-locked .cascade-step-label{color:var(--border);}
+  .cascade-select{font-family:var(--font-sans);font-size:13px;border:1px solid var(--border);border-radius:6px;padding:7px 10px;background:var(--surface2);color:var(--text-primary);outline:none;cursor:pointer;width:100%;transition:border-color .15s,opacity .15s;}
+  .cascade-select:focus{border-color:var(--accent);}
+  .cascade-select:disabled{opacity:.35;cursor:not-allowed;}
+  .cascade-arrow{font-size:18px;color:var(--border);align-self:flex-end;padding-bottom:10px;flex-shrink:0;}
 
   /* Group context banner */
   .group-banner{display:none;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:14px 20px;gap:16px;flex-wrap:wrap;align-items:center;}
@@ -74,11 +73,7 @@
   .meta-field input{font-family:var(--font-sans);font-size:13px;border:1px solid var(--border);border-radius:6px;padding:7px 10px;background:var(--surface);color:var(--text-primary);outline:none;transition:border-color .15s;}
   .meta-field input:focus{border-color:var(--accent);}
 
-  /* Individual docent selector inside csv bar */
-  .docent-selector{display:none;flex:1;min-width:200px;flex-direction:column;gap:5px;}
-  .docent-selector.visible{display:flex;}
-  .docent-selector label{font-size:10px;font-weight:500;letter-spacing:.06em;text-transform:uppercase;color:var(--text-muted);}
-  .docent-select-input{font-family:var(--font-sans);font-size:13px;border:1px solid var(--border);border-radius:6px;padding:7px 10px;background:var(--surface2);color:var(--text-primary);outline:none;width:100%;cursor:pointer;}
+
 
   /* Wheel */
   .wheel-section{display:flex;flex-direction:column;align-items:center;gap:14px;}
@@ -163,7 +158,7 @@
   @media print {
     @page{margin:16mm 14mm;size:A4 portrait;}
     body{background:#1e1e2a !important;padding:0;-webkit-print-color-adjust:exact;print-color-adjust:exact;color-adjust:exact;font-size:12px;}
-    .btn-print,.btn-outline,.modal-overlay,.csv-bar,.view-tabs,.group-selector-bar{display:none !important;}
+    .btn-print,.btn-outline,.modal-overlay,.csv-bar,.cascade-bar{display:none !important;}
     .page{max-width:100%;gap:14px;}
     .header{padding-bottom:12px;}
     .header-title{font-size:18px;}
@@ -292,35 +287,48 @@
     <div class="csv-error" id="csv-error"></div>
   </div>
 
-  <!-- View mode tabs (visible after CSV load) -->
-  <div class="view-tabs" id="view-tabs">
-    <button class="view-tab active" id="tab-individual" onclick="setView('individual')">
-      &#128100; Docente individual
-    </button>
-    <button class="view-tab" id="tab-programa" onclick="setView('programa')">
-      &#128218; Por programa academico
-    </button>
-    <button class="view-tab" id="tab-facultad" onclick="setView('facultad')">
-      &#127979; Por facultad
-    </button>
-  </div>
+  <!-- Cascade selectors (visible after CSV load) -->
+  <div class="cascade-bar" id="cascade-bar">
 
-  <!-- Individual selector (inside page, shown in individual mode) -->
-  <div class="docent-selector" id="docent-selector">
-    <label>Seleccionar docente</label>
-    <select class="docent-select-input" id="docent-select" onchange="loadDocent(this.value)">
-      <option value="">-- Elige un docente --</option>
-    </select>
-  </div>
-
-  <!-- Group selector (shown in programa/facultad mode) -->
-  <div class="group-selector-bar" id="group-selector-bar">
-    <div class="group-sel-field">
-      <label id="group-sel-label">Seleccionar programa</label>
-      <select class="group-sel-input" id="group-select" onchange="loadGroup(this.value)">
-        <option value="">-- Elige una opcion --</option>
+    <!-- Step 1: Facultad (always visible after CSV load) -->
+    <div class="cascade-step" id="step-facultad">
+      <div class="cascade-step-header">
+        <span class="cascade-step-num">1</span>
+        <span class="cascade-step-label">Facultad</span>
+      </div>
+      <select class="cascade-select" id="sel-facultad" onchange="onFacultadChange(this.value)">
+        <option value="">-- Selecciona una facultad --</option>
       </select>
     </div>
+
+    <!-- Arrow -->
+    <div class="cascade-arrow" id="arrow-1">&#8594;</div>
+
+    <!-- Step 2: Programa (unlocked after facultad) -->
+    <div class="cascade-step cascade-locked" id="step-programa">
+      <div class="cascade-step-header">
+        <span class="cascade-step-num">2</span>
+        <span class="cascade-step-label">Programa academico</span>
+      </div>
+      <select class="cascade-select" id="sel-programa" onchange="onProgramaChange(this.value)" disabled>
+        <option value="">-- Primero elige una facultad --</option>
+      </select>
+    </div>
+
+    <!-- Arrow -->
+    <div class="cascade-arrow" id="arrow-2">&#8594;</div>
+
+    <!-- Step 3: Docente (unlocked after programa) -->
+    <div class="cascade-step cascade-locked" id="step-docente">
+      <div class="cascade-step-header">
+        <span class="cascade-step-num">3</span>
+        <span class="cascade-step-label">Docente individual</span>
+      </div>
+      <select class="cascade-select" id="sel-docente" onchange="onDocenteChange(this.value)" disabled>
+        <option value="">-- Primero elige un programa --</option>
+      </select>
+    </div>
+
   </div>
 
   <!-- Group context banner -->
@@ -434,104 +442,147 @@ function scoreColor(v){
 }
 function scoreFrac(v){ return 1-((v-1)/4)*0.86; }
 
-// ── View switching ────────────────────────────────────────────────────────
-function setView(mode){
-  currentView = mode;
-  ['individual','programa','facultad'].forEach(function(m){
-    document.getElementById('tab-'+m).classList.toggle('active', m===mode);
-  });
+// ── Cascade navigation ───────────────────────────────────────────────────
+var selectedFacultad = '';
+var selectedPrograma = '';
 
-  var isSingle = mode === 'individual';
-  groupMode = !isSingle;
+function onFacultadChange(val){
+  selectedFacultad = val;
+  selectedPrograma = '';
 
-  // Show/hide individual selector
-  document.getElementById('docent-selector').classList.toggle('visible', isSingle);
+  // Reset programa and docente steps
+  unlockStep('programa', false);
+  unlockStep('docente', false);
+  resetProgStep();
+  resetDocStep();
 
-  // Show/hide group selector
-  var gsBar = document.getElementById('group-selector-bar');
-  gsBar.classList.toggle('visible', !isSingle);
-  document.getElementById('group-sel-label').textContent =
-    mode === 'programa' ? 'Seleccionar programa academico' : 'Seleccionar facultad';
-
-  // Reset group selector options
-  populateGroupSelect(mode);
-
-  // Hide group banner and summary until selection
   document.getElementById('group-banner').classList.remove('visible');
   document.getElementById('summary-section').style.display = 'none';
 
-  // Meta grid: hide in group mode
-  document.getElementById('meta-grid').style.display = isSingle ? '' : 'none';
+  if(!val){ resetScores(); buildBlocks(true); draw(); return; }
 
-  // Score section title
-  document.getElementById('score-section-title').textContent =
-    isSingle ? 'Puntajes por dimension y desempeno' : 'Promedio del grupo por dimension';
+  var rows = csvData.filter(function(r){ return (r['facultad']||'').trim()===val; });
 
-  if(isSingle){
-    // Restore individual scores to UI
-    resetScores();
-    buildBlocks(false);
-  } else {
-    // Reset wheel and cards
-    resetScores();
-    buildBlocks(true);
-    draw();
-  }
-}
-
-function populateGroupSelect(mode){
-  var sel = document.getElementById('group-select');
-  sel.innerHTML = '<option value="">-- Elige una opcion --</option>';
-  if(!csvData.length) return;
-  var key = mode === 'programa' ? 'programa' : 'facultad';
+  // 1. Populate and unlock programa FIRST, before any DOM rebuilds
+  var selP = document.getElementById('sel-programa');
+  selP.innerHTML = '<option value="">-- Selecciona un programa --</option>';
   var seen = {};
-  csvData.forEach(function(row){
-    var v = (row[key]||'').trim();
-    if(v && !seen[v]){ seen[v]=true; }
+  rows.forEach(function(r){ var p=(r['programa']||'').trim(); if(p&&!seen[p]) seen[p]=true; });
+  Object.keys(seen).sort().forEach(function(p){
+    var opt=document.createElement('option'); opt.value=p; opt.textContent=p; selP.appendChild(opt);
   });
-  Object.keys(seen).sort().forEach(function(v){
-    var opt = document.createElement('option');
-    opt.value = v; opt.textContent = v;
-    sel.appendChild(opt);
-  });
+  unlockStep('programa', true);
+
+  // 2. Show facultad average deferred so cascade DOM is fully committed
+  setTimeout(function(){ showGroupAverage(rows, val, 'Facultad'); }, 0);
 }
 
-function loadGroup(value){
-  if(!value) return;
-  var key = currentView === 'programa' ? 'programa' : 'facultad';
-  var rows = csvData.filter(function(r){ return (r[key]||'').trim() === value; });
-  if(!rows.length) return;
+function onProgramaChange(val){
+  selectedPrograma = val;
 
-  // Compute averages
+  // Reset docente step
+  unlockStep('docente', false);
+  resetDocStep();
+
+  document.getElementById('group-banner').classList.remove('visible');
+  document.getElementById('summary-section').style.display = 'none';
+
+  if(!val){
+    // Return to facultad average
+    var rowsF = csvData.filter(function(r){ return (r['facultad']||'').trim()===selectedFacultad; });
+    showGroupAverage(rowsF, selectedFacultad, 'Facultad');
+    return;
+  }
+
+  // Show programa average
+  var rows = csvData.filter(function(r){
+    return (r['facultad']||'').trim()===selectedFacultad &&
+           (r['programa']||'').trim()===val;
+  });
+  // 1. Populate and unlock docente FIRST
+  var selD = document.getElementById('sel-docente');
+  selD.innerHTML = '<option value="">-- Ver promedio del programa --</option>';
+  rows.forEach(function(r, idx){
+    var opt=document.createElement('option');
+    var globalIdx = csvData.indexOf(r);
+    opt.value = globalIdx;
+    opt.textContent = (r['nombre']||'Docente '+(idx+1));
+    selD.appendChild(opt);
+  });
+  unlockStep('docente', true);
+
+  // 2. Show programa average deferred so cascade DOM is fully committed
+  setTimeout(function(){ showGroupAverage(rows, val, 'Programa'); }, 0);
+}
+
+function onDocenteChange(val){
+  if(val===''){
+    // Back to programa average
+    var rows = csvData.filter(function(r){
+      return (r['facultad']||'').trim()===selectedFacultad &&
+             (r['programa']||'').trim()===selectedPrograma;
+    });
+    showGroupAverage(rows, selectedPrograma, 'Programa');
+    document.getElementById('summary-section').style.display = 'none';
+    return;
+  }
+  // Load individual docente
+  groupMode = false;
+  document.getElementById('meta-grid').style.display = '';
+  document.getElementById('score-section-title').textContent = 'Puntajes por dimension y desempeno';
+  document.getElementById('group-banner').classList.remove('visible');
+  document.getElementById('summary-section').style.display = 'none';
+  loadDocent(val);
+  buildBlocks(false);
+}
+
+function showGroupAverage(rows, label, type){
+  if(!rows.length) return;
+  groupMode = true;
+  document.getElementById('meta-grid').style.display = 'none';
+  document.getElementById('score-section-title').textContent = 'Promedio del grupo por dimension';
+
   for(var ci=0;ci<N;ci++){
     for(var di=0;di<D;di++){
-      var col = CSV_COL_MAP[ci][di];
-      var sum = 0;
-      rows.forEach(function(r){ sum += parseFloat(r[col])||3; });
-      scores[ci][di] = sum/rows.length;
+      var col=CSV_COL_MAP[ci][di], sum=0;
+      rows.forEach(function(r){ sum+=parseFloat(r[col])||3; });
+      scores[ci][di]=sum/rows.length;
     }
   }
-
-  // Global average
-  var allVals = [];
+  var allVals=[];
   for(var ci2=0;ci2<N;ci2++) for(var di2=0;di2<D;di2++) allVals.push(scores[ci2][di2]);
-  var globalAvg = allVals.reduce(function(a,b){return a+b;},0)/allVals.length;
+  var globalAvg=allVals.reduce(function(a,b){return a+b;},0)/allVals.length;
 
-  // Banner
-  document.getElementById('group-banner-title').textContent = value;
-  document.getElementById('group-banner-sub').textContent =
-    currentView === 'programa' ? 'Programa academico — promedio del grupo' : 'Facultad — promedio del grupo';
+  document.getElementById('group-banner-title').textContent = label;
+  document.getElementById('group-banner-sub').textContent = type+' — promedio del grupo';
   document.getElementById('group-stat-count').textContent = rows.length;
   document.getElementById('group-stat-avg').textContent = globalAvg.toFixed(1);
   document.getElementById('group-banner').classList.add('visible');
 
-  // Update score display
   buildBlocks(true);
   draw();
-
-  // Build summary table
   buildSummaryTable(rows);
   document.getElementById('summary-section').style.display = '';
+}
+
+function unlockStep(step, unlock){
+  var el = document.getElementById('step-'+step);
+  var sel = document.getElementById('sel-'+step);
+  if(unlock){
+    el.classList.remove('cascade-locked');
+    sel.disabled = false;
+  } else {
+    el.classList.add('cascade-locked');
+    sel.disabled = true;
+  }
+}
+function resetProgStep(){
+  var sel=document.getElementById('sel-programa');
+  sel.innerHTML='<option value="">-- Primero elige una facultad --</option>';
+}
+function resetDocStep(){
+  var sel=document.getElementById('sel-docente');
+  sel.innerHTML='<option value="">-- Primero elige un programa --</option>';
 }
 
 // ── CSV Handling ──────────────────────────────────────────────────────────
@@ -568,20 +619,21 @@ function parseCSV(text, filename){
   document.getElementById('drop-label').textContent =
     filename+" ("+csvData.length+" docente"+(csvData.length>1?"s":"")+" cargado"+(csvData.length>1?"s":"")+")";
 
-  // Show tabs
-  document.getElementById('view-tabs').classList.add('visible');
-
-  // Populate individual selector
-  var sel = document.getElementById('docent-select');
-  sel.innerHTML = '<option value="">-- Elige un docente --</option>';
-  csvData.forEach(function(row,idx){
-    var opt = document.createElement('option');
-    opt.value=idx; opt.textContent=(row['nombre']||'Docente '+(idx+1));
-    sel.appendChild(opt);
+  // Show cascade bar and populate facultad selector
+  document.getElementById('cascade-bar').classList.add('visible');
+  var selF = document.getElementById('sel-facultad');
+  selF.innerHTML = '<option value="">-- Selecciona una facultad --</option>';
+  var seenF = {};
+  csvData.forEach(function(row){
+    var v=(row['facultad']||'').trim(); if(v&&!seenF[v]) seenF[v]=true;
   });
-  document.getElementById('docent-selector').classList.add('visible');
-
-  if(csvData.length===1){ sel.value=0; loadDocent(0); }
+  Object.keys(seenF).sort().forEach(function(v){
+    var opt=document.createElement('option'); opt.value=v; opt.textContent=v; selF.appendChild(opt);
+  });
+  // Reset downstream steps
+  unlockStep('programa', false); unlockStep('docente', false);
+  resetProgStep(); resetDocStep();
+  resetScores(); buildBlocks(true); draw();
 }
 function splitCSVLine(line){
   var result=[],cur='',inQ=false;
