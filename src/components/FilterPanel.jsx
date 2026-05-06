@@ -69,9 +69,10 @@ function FilterGroup({ title, filterKey, options, active, onToggle, onClear }) {
   return (
     <div style={{
       background: 'var(--bg-surface)',
-      border: '1px solid var(--border)',
+      border: `1px solid ${active.length > 0 ? 'var(--accent)' : 'var(--border)'}`,
       borderRadius: 'var(--radius)',
       overflow: 'hidden',
+      transition: 'border-color .15s',
     }}>
       <div style={{
         display: 'flex',
@@ -81,28 +82,49 @@ function FilterGroup({ title, filterKey, options, active, onToggle, onClear }) {
         background: 'var(--bg-surface2)',
         borderBottom: '1px solid var(--border)',
       }}>
-        <span style={{
-          fontSize: '10px',
-          fontWeight: '500',
-          letterSpacing: '.06em',
-          textTransform: 'uppercase',
-          color: 'var(--text-muted)',
-        }}>
-          {title}
-        </span>
-        <button
-          onClick={onClear}
-          style={{
-            background: 'none',
-            border: 'none',
-            color: 'var(--accent)',
+        <div style={{ display: 'flex', alignItems: 'center', gap: '7px' }}>
+          <span style={{
             fontSize: '10px',
-            cursor: 'pointer',
-            padding: 0,
-          }}
-        >
-          Limpiar
-        </button>
+            fontWeight: '500',
+            letterSpacing: '.06em',
+            textTransform: 'uppercase',
+            color: active.length > 0 ? 'var(--text-primary)' : 'var(--text-muted)',
+          }}>
+            {title}
+          </span>
+          {active.length > 0 && (
+            <span style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              width: '16px',
+              height: '16px',
+              borderRadius: '50%',
+              background: 'var(--accent)',
+              color: '#fff',
+              fontSize: '9px',
+              fontWeight: '700',
+              flexShrink: 0,
+            }}>
+              {active.length}
+            </span>
+          )}
+        </div>
+        {active.length > 0 && (
+          <button
+            onClick={onClear}
+            style={{
+              background: 'none',
+              border: 'none',
+              color: 'var(--accent)',
+              fontSize: '10px',
+              cursor: 'pointer',
+              padding: 0,
+            }}
+          >
+            Limpiar
+          </button>
+        )}
       </div>
       <div style={{ padding: '8px 10px', display: 'flex', flexDirection: 'column', gap: '4px' }}>
         {options.map(opt => (
@@ -114,7 +136,8 @@ function FilterGroup({ title, filterKey, options, active, onToggle, onClear }) {
             borderRadius: '5px',
             cursor: 'pointer',
             fontSize: '12px',
-            color: 'var(--text-secondary)',
+            color: active.includes(opt) ? 'var(--text-primary)' : 'var(--text-secondary)',
+            fontWeight: active.includes(opt) ? '500' : '400',
           }}>
             <input
               type="checkbox"
@@ -199,32 +222,86 @@ export default function FilterPanel({
         />
       ))}
 
-      <button
-        onClick={onResetAll}
-        style={{
-          fontFamily: 'inherit',
-          fontSize: '11px',
-          fontWeight: '500',
-          padding: '7px 10px',
-          background: 'transparent',
-          color: 'var(--text-muted)',
-          border: '1px solid var(--border)',
-          borderRadius: '7px',
-          cursor: 'pointer',
-          width: '100%',
-          transition: 'color .15s, border-color .15s',
-        }}
-        onMouseEnter={e => {
-          e.currentTarget.style.color = 'var(--s1)'
-          e.currentTarget.style.borderColor = 'var(--s1)'
-        }}
-        onMouseLeave={e => {
-          e.currentTarget.style.color = 'var(--text-muted)'
-          e.currentTarget.style.borderColor = 'var(--border)'
-        }}
-      >
-        ↺ Limpiar todos los filtros
-      </button>
+      {/* Resumen de filtros activos */}
+      {Object.values(activeFilters).some(v => v.length > 0) && (
+        <div style={{
+          background: 'rgba(0,180,221,0.08)',
+          border: '1px solid var(--accent)',
+          borderRadius: 'var(--radius)',
+          padding: '10px 12px',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          gap: '8px',
+        }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '7px' }}>
+            <span style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              width: '18px',
+              height: '18px',
+              borderRadius: '50%',
+              background: 'var(--accent)',
+              color: '#fff',
+              fontSize: '10px',
+              fontWeight: '700',
+              flexShrink: 0,
+            }}>
+              {Object.values(activeFilters).reduce((sum, v) => sum + v.length, 0)}
+            </span>
+            <span style={{ fontSize: '11px', color: 'var(--accent)', fontWeight: '500' }}>
+              filtros activos
+            </span>
+          </div>
+          <button
+            onClick={onResetAll}
+            style={{
+              fontFamily: 'inherit',
+              fontSize: '11px',
+              fontWeight: '500',
+              padding: '4px 10px',
+              background: 'transparent',
+              color: 'var(--accent)',
+              border: '1px solid var(--accent)',
+              borderRadius: '6px',
+              cursor: 'pointer',
+            }}
+          >
+            Limpiar todo
+          </button>
+        </div>
+      )}
+
+      {/* Botón reset — solo visible cuando no hay filtros activos */}
+      {!Object.values(activeFilters).some(v => v.length > 0) && (
+        <button
+          onClick={onResetAll}
+          style={{
+            fontFamily: 'inherit',
+            fontSize: '11px',
+            fontWeight: '500',
+            padding: '7px 10px',
+            background: 'transparent',
+            color: 'var(--text-muted)',
+            border: '1px solid var(--border)',
+            borderRadius: '7px',
+            cursor: 'pointer',
+            width: '100%',
+            transition: 'color .15s, border-color .15s',
+          }}
+          onMouseEnter={e => {
+            e.currentTarget.style.color = 'var(--s1)'
+            e.currentTarget.style.borderColor = 'var(--s1)'
+          }}
+          onMouseLeave={e => {
+            e.currentTarget.style.color = 'var(--text-muted)'
+            e.currentTarget.style.borderColor = 'var(--border)'
+          }}
+        >
+          ↺ Limpiar todos los filtros
+        </button>
+      )}
 
     </div>
   )

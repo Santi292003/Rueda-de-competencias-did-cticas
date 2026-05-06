@@ -12,12 +12,31 @@ import PrintButton from './components/PrintButton.jsx'
 import Welcome from './components/Welcome.jsx'
 import { ITEM_MAP } from './data/itemMap.js'
 import PrintHeader from './components/PrintHeader.jsx'
+import InstructionsModal from './components/InstructionsModal.jsx'
+import { useEffect } from 'react'
 
 export default function App() {
   const csv = useCsvData()
   const scores = useScores(csv.csvData)
   const [wheelMode, setWheelMode] = useState('desempenios')
   const printRef = useRef(null)
+  useEffect(() => {
+  const base = 'Rueda de Competencias — UTP'
+  if (!csv.isLoaded) {
+    document.title = base
+    return
+  }
+  if (scores.selectedDocente !== null) {
+    const row = csv.csvData[scores.selectedDocente]
+    document.title = `${row?.nombre || 'Docente'} — ${base}`
+  } else if (scores.selectedPrograma) {
+    document.title = `${scores.selectedPrograma} — ${base}`
+  } else if (scores.selectedFacultad) {
+    document.title = `${scores.selectedFacultad} — ${base}`
+  } else {
+    document.title = base
+  }
+}, [csv.isLoaded, scores.selectedFacultad, scores.selectedPrograma, scores.selectedDocente])
 
   function handleFile(e) {
     const file = e.target.files[0]
@@ -91,6 +110,7 @@ export default function App() {
             Vicerrectoria Academica · Univirtual
           </p>
         </div>
+        <InstructionsModal />
       </div>
 
       {/* CSV Bar */}
