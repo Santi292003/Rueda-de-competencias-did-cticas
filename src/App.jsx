@@ -1,199 +1,194 @@
+import { useState } from 'react'
 import { useCsvData } from './hooks/useCsvData.js'
-import { useScores, fmtVal } from './hooks/useScores.js'
+import { useScores } from './hooks/useScores.js'
+import Wheel from './components/Wheel.jsx'
+import WheelToggle from './components/WheelToggle.jsx'
+import WheelLegend from './components/WheelLegend.jsx'
+import ContextBanner from './components/ContextBanner.jsx'
+import ScoreCards from './components/ScoreCards.jsx'
+import FilterPanel from './components/FilterPanel.jsx'
+import SummaryTable from './components/SummaryTable.jsx'
 
-function App() {
+export default function App() {
   const csv = useCsvData()
   const scores = useScores(csv.csvData)
+  const [wheelMode, setWheelMode] = useState('desempenios')
 
   function handleFile(e) {
-    csv.loadFile(e.target.files[0])
+    const file = e.target.files[0]
+    if (file) csv.loadFile(file)
   }
 
+  function handleDrop(e) {
+    e.preventDefault()
+    const file = e.dataTransfer.files[0]
+    if (file) csv.loadFile(file)
+  }
+
+  // Derived data for FilterPanel selectors
+  const facultades = csv.getUnique('facultad')
+  const programas = scores.selectedFacultad
+    ? csv.getProgramasByFacultad(scores.selectedFacultad)
+    : []
+  const docentes = scores.selectedPrograma
+    ? csv.getDocentesByPrograma(scores.selectedFacultad, scores.selectedPrograma)
+    : []
+
   return (
-    <div style={{ padding: '24px', maxWidth: '800px', margin: '0 auto' }}>
+    <div style={{ padding: '24px', maxWidth: '1200px', margin: '0 auto' }}>
 
-      <h1 style={{ color: '#7b9fd4', marginBottom: '8px' }}>
-        Rueda de Competencias — UTP
-      </h1>
-      <p style={{ color: '#9e9bb8', marginBottom: '24px' }}>
-        Fase 1 — verificación de flujo de datos
-      </p>
+      {/* Header */}
+      <div style={{
+        paddingBottom: '16px',
+        borderBottom: '1.5px solid #38384f',
+        display: 'flex',
+        alignItems: 'flex-start',
+        justifyContent: 'space-between',
+        flexWrap: 'wrap',
+        gap: '12px',
+        marginBottom: '20px',
+      }}>
+        <div>
+          <div style={{
+            fontSize: '11px',
+            fontWeight: '500',
+            letterSpacing: '.12em',
+            textTransform: 'uppercase',
+            color: '#7b9fd4',
+            marginBottom: '5px',
+          }}>
+            Marco de Competencias en Didacticas Mediadas por TIC
+          </div>
+          <h1 style={{
+            fontFamily: 'Georgia, serif',
+            fontSize: '20px',
+            fontWeight: '700',
+            color: '#e8e6f0',
+            lineHeight: '1.25',
+          }}>
+            Rueda de Competencias Docentes — UTP
+          </h1>
+          <p style={{ fontSize: '12px', color: '#9e9bb8', marginTop: '3px' }}>
+            Vicerrectoria Academica · Univirtual
+          </p>
+        </div>
+      </div>
 
-      {/* Carga de CSV */}
+      {/* CSV Bar */}
       <div style={{
         background: '#272736',
         border: '1px solid #38384f',
         borderRadius: '10px',
-        padding: '16px',
-        marginBottom: '20px'
+        padding: '14px 18px',
+        display: 'flex',
+        alignItems: 'center',
+        gap: '12px',
+        flexWrap: 'wrap',
+        marginBottom: '20px',
       }}>
-        <p style={{ color: '#9e9bb8', fontSize: '13px', marginBottom: '10px' }}>
-          Cargar CSV de prueba:
-        </p>
-        <input
-          type="file"
-          accept=".csv"
-          onChange={handleFile}
-          style={{ color: '#e8e6f0', fontSize: '13px' }}
-        />
+        <span style={{ fontSize: '12px', fontWeight: '500', color: '#9e9bb8' }}>
+          Cargar datos:
+        </span>
+
+        <div
+          onClick={() => document.getElementById('csv-input').click()}
+          onDragOver={e => e.preventDefault()}
+          onDrop={handleDrop}
+          style={{
+            flex: 1,
+            minWidth: '180px',
+            border: `1.5px dashed ${csv.isLoaded ? '#3ec97a' : '#38384f'}`,
+            borderRadius: '8px',
+            padding: '9px 14px',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '9px',
+            cursor: 'pointer',
+            fontSize: '12px',
+            color: csv.isLoaded ? '#3ec97a' : '#6e6c88',
+          }}
+        >
+          <span>{csv.isLoaded
+            ? `✓ ${csv.fileName} — ${csv.csvData.length} docentes`
+            : 'Arrastra el CSV aqui o haz clic para buscar'}
+          </span>
+          <input
+            id="csv-input"
+            type="file"
+            accept=".csv"
+            onChange={handleFile}
+            style={{ display: 'none' }}
+          />
+        </div>
+
         {csv.error && (
-          <p style={{ color: '#e05252', fontSize: '12px', marginTop: '8px' }}>
+          <p style={{ color: '#e05252', fontSize: '12px', width: '100%' }}>
             ❌ {csv.error}
           </p>
         )}
         {csv.warnings.map((w, i) => (
-          <p key={i} style={{ color: '#e8884a', fontSize: '12px', marginTop: '6px' }}>
+          <p key={i} style={{ color: '#e8884a', fontSize: '12px', width: '100%' }}>
             ⚠️ {w}
           </p>
         ))}
-        {csv.isLoaded && (
-          <p style={{ color: '#3ec97a', fontSize: '12px', marginTop: '8px' }}>
-            ✅ {csv.fileName} — {csv.csvData.length} docentes cargados
-          </p>
-        )}
       </div>
 
-      {/* Verificación de datos */}
+      {/* Main layout */}
       {csv.isLoaded && (
-        <>
-          {/* Contexto */}
-          <div style={{
-            background: '#272736',
-            border: '1px solid #38384f',
-            borderRadius: '10px',
-            padding: '16px',
-            marginBottom: '20px'
-          }}>
-            <p style={{ color: '#e8e6f0', fontWeight: '500', marginBottom: '4px' }}>
-              {scores.contextLabel}
-            </p>
-            <p style={{ color: '#6e6c88', fontSize: '12px', marginBottom: '12px' }}>
-              {scores.contextSub}
-            </p>
-            <p style={{ color: '#9e9bb8', fontSize: '13px' }}>
-              Docentes en vista: <strong style={{ color: '#7b9fd4' }}>{scores.rows.length}</strong>
-              &nbsp;·&nbsp;
-              Promedio global: <strong style={{ color: '#7b9fd4' }}>{fmtVal(scores.globalAvg)}</strong>
-            </p>
+        <div style={{ display: 'flex', gap: '20px', alignItems: 'flex-start' }}>
+
+          {/* Panel de filtros */}
+          <div style={{ width: '220px', flexShrink: 0 }}>
+            <FilterPanel
+              facultades={facultades}
+              selectedFacultad={scores.selectedFacultad}
+              programas={programas}
+              selectedPrograma={scores.selectedPrograma}
+              docentes={docentes.map(d => ({ value: d.idx, label: d.name }))}
+              selectedDocente={scores.selectedDocente}
+              onFacultadChange={scores.onFacultadChange}
+              onProgramaChange={scores.onProgramaChange}
+              onDocenteChange={scores.onDocenteChange}
+              activeFilters={scores.activeFilters}
+              onToggleFilter={scores.toggleFilter}
+              onClearFilter={scores.clearFilter}
+              onResetAll={scores.resetAll}
+            />
           </div>
 
-          {/* Tabla de scores calculados */}
-          <div style={{
-            background: '#272736',
-            border: '1px solid #38384f',
-            borderRadius: '10px',
-            padding: '16px',
-            marginBottom: '20px',
-            overflowX: 'auto'
-          }}>
-            <p style={{ color: '#6e6c88', fontSize: '11px', letterSpacing: '.08em', textTransform: 'uppercase', marginBottom: '12px' }}>
-              Scores calculados (todos los docentes)
-            </p>
-            <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '12px' }}>
-              <thead>
-                <tr>
-                  <th style={{ textAlign: 'left', color: '#6e6c88', padding: '6px 8px', borderBottom: '1px solid #38384f' }}>Dimension</th>
-                  <th style={{ textAlign: 'center', color: '#6e6c88', padding: '6px 8px', borderBottom: '1px solid #38384f' }}>D1</th>
-                  <th style={{ textAlign: 'center', color: '#6e6c88', padding: '6px 8px', borderBottom: '1px solid #38384f' }}>D2</th>
-                  <th style={{ textAlign: 'center', color: '#6e6c88', padding: '6px 8px', borderBottom: '1px solid #38384f' }}>D3</th>
-                </tr>
-              </thead>
-              <tbody>
-                {scores.scores.map((dimScores, i) => (
-                  <tr key={i}>
-                    <td style={{ color: '#9e9bb8', padding: '6px 8px', borderBottom: '0.5px solid #38384f' }}>
-                      {i + 1}. {['DT','DDD','DDE','DCP','DEA','DED','DDP'][i]}
-                    </td>
-                    {dimScores.map((v, j) => (
-                      <td key={j} style={{
-                        textAlign: 'center',
-                        padding: '6px 8px',
-                        borderBottom: '0.5px solid #38384f',
-                        color: v !== null ? '#e8e6f0' : '#38384f',
-                        fontWeight: v !== null ? '500' : '400'
-                      }}>
-                        {fmtVal(v)}
-                      </td>
-                    ))}
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+          {/* Contenido principal */}
+          <div style={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column', gap: '20px' }}>
 
-          {/* Prueba de filtros */}
-          <div style={{
-            background: '#272736',
-            border: '1px solid #38384f',
-            borderRadius: '10px',
-            padding: '16px'
-          }}>
-            <p style={{ color: '#6e6c88', fontSize: '11px', letterSpacing: '.08em', textTransform: 'uppercase', marginBottom: '12px' }}>
-              Prueba de filtros
-            </p>
+            <ContextBanner
+              title={scores.contextLabel}
+              sub={scores.contextSub}
+              count={scores.rows.length}
+              globalAvg={scores.globalAvg}
+            />
 
-            <div style={{ marginBottom: '12px' }}>
-              <label style={{ color: '#9e9bb8', fontSize: '12px', display: 'block', marginBottom: '4px' }}>
-                Facultad:
-              </label>
-              <select
-                value={scores.selectedFacultad}
-                onChange={e => scores.onFacultadChange(e.target.value)}
-                style={{ background: '#303044', color: '#e8e6f0', border: '1px solid #38384f', borderRadius: '6px', padding: '6px 8px', fontSize: '12px', width: '100%' }}
-              >
-                <option value="">— Todas —</option>
-                {csv.getUnique('facultad').map(f => (
-                  <option key={f} value={f}>{f}</option>
-                ))}
-              </select>
+            <div style={{
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              gap: '12px',
+            }}>
+              <WheelToggle mode={wheelMode} onChange={setWheelMode} />
+              <Wheel
+                scores={scores.scores}
+                mode={wheelMode}
+                centerLabel={scores.contextLabel}
+              />
+              <WheelLegend />
             </div>
 
-            {scores.selectedFacultad && (
-              <div style={{ marginBottom: '12px' }}>
-                <label style={{ color: '#9e9bb8', fontSize: '12px', display: 'block', marginBottom: '4px' }}>
-                  Programa:
-                </label>
-                <select
-                  value={scores.selectedPrograma}
-                  onChange={e => scores.onProgramaChange(e.target.value)}
-                  style={{ background: '#303044', color: '#e8e6f0', border: '1px solid #38384f', borderRadius: '6px', padding: '6px 8px', fontSize: '12px', width: '100%' }}
-                >
-                  <option value="">— Todos —</option>
-                  {csv.getProgramasByFacultad(scores.selectedFacultad).map(p => (
-                    <option key={p} value={p}>{p}</option>
-                  ))}
-                </select>
-              </div>
+            <ScoreCards scores={scores.scores} mode={wheelMode} />
+            {scores.selectedPrograma && (
+              <SummaryTable rows={scores.rows} />
             )}
-
-            <div>
-              <label style={{ color: '#9e9bb8', fontSize: '12px', display: 'block', marginBottom: '6px' }}>
-                Modalidad (union):
-              </label>
-              {csv.getUnique('modalidad').map(m => (
-                <label key={m} style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px', cursor: 'pointer' }}>
-                  <input
-                    type="checkbox"
-                    checked={scores.activeFilters.modalidad.includes(m)}
-                    onChange={() => scores.toggleFilter('modalidad', m)}
-                    style={{ accentColor: '#7b9fd4' }}
-                  />
-                  <span style={{ color: '#9e9bb8', fontSize: '12px' }}>{m}</span>
-                </label>
-              ))}
-            </div>
-
-            <button
-              onClick={scores.resetAll}
-              style={{ marginTop: '12px', background: 'transparent', border: '1px solid #38384f', color: '#6e6c88', borderRadius: '6px', padding: '6px 12px', cursor: 'pointer', fontSize: '12px' }}
-            >
-              Limpiar filtros
-            </button>
           </div>
-        </>
+        </div>
       )}
+
     </div>
   )
 }
-
-export default App
