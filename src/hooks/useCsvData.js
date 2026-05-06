@@ -86,7 +86,7 @@ export function useCsvData() {
         setError('')
         setWarnings(
           missingItems.length > 0
-            ? [`Columnas de ítems no encontradas: ${missingItems.slice(0, 5).join(', ')}${missingItems.length > 5 ? '...' : ''}. Los desempeños correspondientes quedarán vacíos.`]
+            ? [`Algunos ítems de la encuesta no se encontraron en el archivo (${missingItems.length} columnas). Los desempeños afectados mostrarán "—". Esto es normal si el CSV proviene de una versión anterior de la encuesta.`]
             : []
         )
       } catch (err) {

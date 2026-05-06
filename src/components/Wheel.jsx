@@ -8,7 +8,7 @@ function drawBase(ctx, cx, cy, R, innerR) {
   // Fondo del círculo
   ctx.beginPath()
   ctx.arc(cx, cy, R + 2, 0, Math.PI * 2)
-  ctx.fillStyle = '#272736'
+  ctx.fillStyle = '#022a47'
   ctx.fill()
 
   // Anillos de referencia
@@ -37,7 +37,7 @@ function drawBase(ctx, cx, cy, R, innerR) {
 function drawCenter(ctx, cx, cy, innerR, label) {
   ctx.beginPath()
   ctx.arc(cx, cy, innerR, 0, Math.PI * 2)
-  ctx.fillStyle = '#1e1e2a'
+  ctx.fillStyle = '#02172B'
   ctx.fill()
   ctx.strokeStyle = 'rgba(255,255,255,0.08)'
   ctx.lineWidth = 1

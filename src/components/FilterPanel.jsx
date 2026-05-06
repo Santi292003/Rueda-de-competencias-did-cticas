@@ -11,7 +11,7 @@ function CascadeStep({ number, label, locked, children }) {
           width: '16px',
           height: '16px',
           borderRadius: '50%',
-          background: locked ? '#38384f' : '#7b9fd4',
+          background: locked ? 'var(--border)' : 'var(--accent)',
           color: '#fff',
           fontSize: '9px',
           fontWeight: '700',
@@ -24,7 +24,7 @@ function CascadeStep({ number, label, locked, children }) {
           fontWeight: '500',
           letterSpacing: '.04em',
           textTransform: 'uppercase',
-          color: locked ? '#38384f' : '#6e6c88',
+          color: locked ? 'var(--border)' : 'var(--text-muted)',
         }}>
           {label}
         </span>
@@ -43,11 +43,11 @@ function CascadeSelect({ value, onChange, options, placeholder, disabled }) {
       style={{
         fontFamily: 'inherit',
         fontSize: '12px',
-        border: '1px solid #38384f',
+        border: '1px solid var(--border)',
         borderRadius: '6px',
         padding: '6px 8px',
-        background: '#303044',
-        color: disabled ? '#38384f' : '#e8e6f0',
+        background: 'var(--bg-surface2)',
+        color: disabled ? 'var(--border)' : 'var(--text-primary)',
         outline: 'none',
         cursor: disabled ? 'not-allowed' : 'pointer',
         width: '100%',
@@ -68,9 +68,9 @@ function CascadeSelect({ value, onChange, options, placeholder, disabled }) {
 function FilterGroup({ title, filterKey, options, active, onToggle, onClear }) {
   return (
     <div style={{
-      background: '#272736',
-      border: '1px solid #38384f',
-      borderRadius: '10px',
+      background: 'var(--bg-surface)',
+      border: '1px solid var(--border)',
+      borderRadius: 'var(--radius)',
       overflow: 'hidden',
     }}>
       <div style={{
@@ -78,15 +78,15 @@ function FilterGroup({ title, filterKey, options, active, onToggle, onClear }) {
         alignItems: 'center',
         justifyContent: 'space-between',
         padding: '8px 12px',
-        background: '#303044',
-        borderBottom: '1px solid #38384f',
+        background: 'var(--bg-surface2)',
+        borderBottom: '1px solid var(--border)',
       }}>
         <span style={{
           fontSize: '10px',
           fontWeight: '500',
           letterSpacing: '.06em',
           textTransform: 'uppercase',
-          color: '#6e6c88',
+          color: 'var(--text-muted)',
         }}>
           {title}
         </span>
@@ -95,7 +95,7 @@ function FilterGroup({ title, filterKey, options, active, onToggle, onClear }) {
           style={{
             background: 'none',
             border: 'none',
-            color: '#7b9fd4',
+            color: 'var(--accent)',
             fontSize: '10px',
             cursor: 'pointer',
             padding: 0,
@@ -114,13 +114,13 @@ function FilterGroup({ title, filterKey, options, active, onToggle, onClear }) {
             borderRadius: '5px',
             cursor: 'pointer',
             fontSize: '12px',
-            color: '#9e9bb8',
+            color: 'var(--text-secondary)',
           }}>
             <input
               type="checkbox"
               checked={active.includes(opt)}
               onChange={() => onToggle(filterKey, opt)}
-              style={{ accentColor: '#7b9fd4', cursor: 'pointer' }}
+              style={{ accentColor: 'var(--accent)', cursor: 'pointer' }}
             />
             {opt}
           </label>
@@ -131,41 +131,28 @@ function FilterGroup({ title, filterKey, options, active, onToggle, onClear }) {
 }
 
 export default function FilterPanel({
-  // Cascade
-  facultades,
-  selectedFacultad,
-  programas,
-  selectedPrograma,
-  docentes,
-  selectedDocente,
-  onFacultadChange,
-  onProgramaChange,
-  onDocenteChange,
-  // Characteristic filters
-  activeFilters,
-  onToggleFilter,
-  onClearFilter,
-  onResetAll,
+  facultades, selectedFacultad, programas, selectedPrograma,
+  docentes, selectedDocente, onFacultadChange, onProgramaChange,
+  onDocenteChange, activeFilters, onToggleFilter, onClearFilter, onResetAll,
 }) {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
 
-      {/* Cascada */}
       <div style={{
-        background: '#272736',
-        border: '1px solid #38384f',
-        borderRadius: '10px',
+        background: 'var(--bg-surface)',
+        border: '1px solid var(--border)',
+        borderRadius: 'var(--radius)',
         overflow: 'hidden',
       }}>
         <div style={{
           padding: '8px 12px',
-          background: '#303044',
-          borderBottom: '1px solid #38384f',
+          background: 'var(--bg-surface2)',
+          borderBottom: '1px solid var(--border)',
           fontSize: '10px',
           fontWeight: '500',
           letterSpacing: '.06em',
           textTransform: 'uppercase',
-          color: '#6e6c88',
+          color: 'var(--text-muted)',
         }}>
           Ubicacion
         </div>
@@ -179,7 +166,6 @@ export default function FilterPanel({
               disabled={false}
             />
           </CascadeStep>
-
           <CascadeStep number={2} label="Programa" locked={!selectedFacultad}>
             <CascadeSelect
               value={selectedPrograma}
@@ -189,7 +175,6 @@ export default function FilterPanel({
               disabled={!selectedFacultad}
             />
           </CascadeStep>
-
           <CascadeStep number={3} label="Docente" locked={!selectedPrograma}>
             <CascadeSelect
               value={selectedDocente ?? ''}
@@ -202,7 +187,6 @@ export default function FilterPanel({
         </div>
       </div>
 
-      {/* Filtros de caracterización */}
       {Object.entries(FILTER_DEFINITIONS).map(([key, opts]) => (
         <FilterGroup
           key={key}
@@ -215,7 +199,6 @@ export default function FilterPanel({
         />
       ))}
 
-      {/* Reset */}
       <button
         onClick={onResetAll}
         style={{
@@ -224,15 +207,21 @@ export default function FilterPanel({
           fontWeight: '500',
           padding: '7px 10px',
           background: 'transparent',
-          color: '#6e6c88',
-          border: '1px solid #38384f',
+          color: 'var(--text-muted)',
+          border: '1px solid var(--border)',
           borderRadius: '7px',
           cursor: 'pointer',
           width: '100%',
           transition: 'color .15s, border-color .15s',
         }}
-        onMouseEnter={e => { e.target.style.color = '#e05252'; e.target.style.borderColor = '#e05252' }}
-        onMouseLeave={e => { e.target.style.color = '#6e6c88'; e.target.style.borderColor = '#38384f' }}
+        onMouseEnter={e => {
+          e.currentTarget.style.color = 'var(--s1)'
+          e.currentTarget.style.borderColor = 'var(--s1)'
+        }}
+        onMouseLeave={e => {
+          e.currentTarget.style.color = 'var(--text-muted)'
+          e.currentTarget.style.borderColor = 'var(--border)'
+        }}
       >
         ↺ Limpiar todos los filtros
       </button>

@@ -2,7 +2,7 @@ import { DIMENSIONS, GROUPS } from '../data/dimensions.js'
 import { scoreColor, fmtVal, calcDimAvg } from '../hooks/useScores.js'
 
 function ScoreDisplay({ value }) {
-  const color = value !== null ? scoreColor(value) : '#38384f'
+  const color = value !== null ? scoreColor(value) : 'var(--border)'
   return (
     <div style={{
       fontSize: '16px',
@@ -23,23 +23,21 @@ function ScoreDisplay({ value }) {
 
 function DimCard({ dimIndex, scores, mode }) {
   const dim = DIMENSIONS[dimIndex]
-  const desempenios = ['D1', 'D2', 'D3']
 
   return (
     <div style={{
-      background: '#272736',
-      border: '1px solid #38384f',
-      borderRadius: '10px',
+      background: 'var(--bg-surface)',
+      border: '1px solid var(--border)',
+      borderRadius: 'var(--radius)',
       overflow: 'hidden',
     }}>
-      {/* Header */}
       <div style={{
         display: 'flex',
         alignItems: 'flex-start',
         gap: '8px',
         padding: '8px 11px',
-        background: '#303044',
-        borderBottom: '1px solid #38384f',
+        background: 'var(--bg-surface2)',
+        borderBottom: '1px solid var(--border)',
         minHeight: '40px',
       }}>
         <span style={{
@@ -54,14 +52,13 @@ function DimCard({ dimIndex, scores, mode }) {
         <span style={{
           fontSize: '11px',
           fontWeight: '500',
-          color: '#e8e6f0',
+          color: 'var(--text-primary)',
           lineHeight: '1.35',
         }}>
           {dim.name}
         </span>
       </div>
 
-      {/* Valores */}
       <div style={{ display: 'flex' }}>
         {mode === 'dimensiones' ? (
           <div style={{
@@ -72,13 +69,13 @@ function DimCard({ dimIndex, scores, mode }) {
             padding: '10px 4px 12px',
             gap: '5px',
           }}>
-            <div style={{ fontSize: '9px', color: '#6e6c88', fontWeight: '500' }}>
+            <div style={{ fontSize: '9px', color: 'var(--text-muted)', fontWeight: '500' }}>
               Promedio dimension
             </div>
             <ScoreDisplay value={calcDimAvg(scores, dimIndex)} />
           </div>
         ) : (
-          desempenios.map((d, di) => (
+          ['D1', 'D2', 'D3'].map((d, di) => (
             <div key={d} style={{
               flex: 1,
               display: 'flex',
@@ -86,9 +83,9 @@ function DimCard({ dimIndex, scores, mode }) {
               alignItems: 'center',
               padding: '10px 4px 12px',
               gap: '5px',
-              borderRight: di < 2 ? '1px solid #38384f' : 'none',
+              borderRight: di < 2 ? '1px solid var(--border)' : 'none',
             }}>
-              <div style={{ fontSize: '9px', color: '#6e6c88', fontWeight: '500' }}>
+              <div style={{ fontSize: '9px', color: 'var(--text-muted)', fontWeight: '500' }}>
                 {d}
               </div>
               <ScoreDisplay value={scores[dimIndex]?.[di] ?? null} />
@@ -114,7 +111,6 @@ function FundamentoGroup({ group, scores, mode }) {
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-      {/* Header del grupo */}
       <div style={{
         display: 'flex',
         alignItems: 'center',
@@ -125,24 +121,17 @@ function FundamentoGroup({ group, scores, mode }) {
         background: bgColors[group.key],
       }}>
         <span style={{ fontSize: '14px' }}>{group.icon}</span>
-        <span style={{ fontSize: '12px', fontWeight: '500', color: '#e8e6f0' }}>
+        <span style={{ fontSize: '12px', fontWeight: '500', color: 'var(--text-primary)' }}>
           {group.title}
         </span>
       </div>
-
-      {/* Grid de tarjetas */}
       <div style={{
         display: 'grid',
         gridTemplateColumns: 'repeat(3, 1fr)',
         gap: '8px',
       }}>
         {group.dims.map(ci => (
-          <DimCard
-            key={ci}
-            dimIndex={ci}
-            scores={scores}
-            mode={mode}
-          />
+          <DimCard key={ci} dimIndex={ci} scores={scores} mode={mode} />
         ))}
       </div>
     </div>
@@ -157,19 +146,14 @@ export default function ScoreCards({ scores, mode = 'desempenios' }) {
         fontWeight: '500',
         letterSpacing: '.08em',
         textTransform: 'uppercase',
-        color: '#6e6c88',
+        color: 'var(--text-muted)',
       }}>
         {mode === 'desempenios'
           ? 'Valores por dimension y desempeno'
           : 'Valores por dimension'}
       </div>
       {GROUPS.map(group => (
-        <FundamentoGroup
-          key={group.key}
-          group={group}
-          scores={scores}
-          mode={mode}
-        />
+        <FundamentoGroup key={group.key} group={group} scores={scores} mode={mode} />
       ))}
     </div>
   )

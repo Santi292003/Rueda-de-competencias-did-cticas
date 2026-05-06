@@ -7,8 +7,8 @@ export default function WheelToggle({ mode, onChange }) {
         fontSize: '12px',
         fontWeight: '500',
         padding: '7px 16px',
-        background: mode === value ? '#303044' : 'transparent',
-        color: mode === value ? '#e8e6f0' : '#6e6c88',
+        background: mode === value ? 'var(--bg-surface2)' : 'transparent',
+        color: mode === value ? 'var(--text-primary)' : 'var(--text-muted)',
         border: 'none',
         borderRadius: '7px',
         cursor: 'pointer',
@@ -22,9 +22,9 @@ export default function WheelToggle({ mode, onChange }) {
   return (
     <div style={{
       display: 'flex',
-      background: '#272736',
-      border: '1px solid #38384f',
-      borderRadius: '10px',
+      background: 'var(--bg-surface)',
+      border: '1px solid var(--border)',
+      borderRadius: 'var(--radius)',
       padding: '4px',
       gap: '4px',
     }}>

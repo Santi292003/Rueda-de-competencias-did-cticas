@@ -1,9 +1,9 @@
 const LEVELS = [
-  { value: 1, color: '#e05252', label: 'Nunca' },
-  { value: 2, color: '#e8884a', label: 'Rara vez' },
-  { value: 3, color: '#d4b800', label: 'A veces' },
-  { value: 4, color: '#7dbe5e', label: 'Frecuentemente' },
-  { value: 5, color: '#3ec97a', label: 'Siempre' },
+  { value: 1, color: 'var(--s1)', label: 'Nunca' },
+  { value: 2, color: 'var(--s2)', label: 'Rara vez' },
+  { value: 3, color: 'var(--s3)', label: 'A veces' },
+  { value: 4, color: 'var(--s4)', label: 'Frecuentemente' },
+  { value: 5, color: 'var(--s5)', label: 'Siempre' },
 ]
 
 export default function WheelLegend() {
@@ -20,7 +20,7 @@ export default function WheelLegend() {
           alignItems: 'center',
           gap: '6px',
           fontSize: '12px',
-          color: '#9e9bb8',
+          color: 'var(--text-secondary)',
         }}>
           <span style={{
             width: '9px',
