@@ -86,31 +86,47 @@ function drawCenter(ctx, cx, cy, innerR, label) {
 }
 
 function drawDimLabel(ctx, cx, cy, R, midA, name) {
-  const lx = cx + Math.cos(midA) * (R + 32)
-  const ly = cy + Math.sin(midA) * (R + 32)
-  ctx.save()
-  ctx.translate(lx, ly)
-  const normA = ((midA % (Math.PI * 2)) + Math.PI * 2) % (Math.PI * 2)
-  const rot = (normA <= Math.PI / 2 || normA >= Math.PI * 1.5)
-    ? midA - Math.PI / 2
-    : midA + Math.PI / 2
-  ctx.rotate(rot)
-  ctx.font = '500 10px "Times New Roman", serif'
-  ctx.fillStyle = '#c8c6e0'
-  ctx.textAlign = 'center'
-  ctx.textBaseline = 'middle'
+  const dist = R + 38
+  const lx = cx + Math.cos(midA) * dist
+  const ly = cy + Math.sin(midA) * dist
+
+  // Word wrap
   const words = name.split(' ')
   const lines = []
   let cur = ''
   words.forEach(w => {
-    if ((cur + ' ' + w).trim().length > 13 && cur) { lines.push(cur); cur = w }
-    else cur = (cur + ' ' + w).trim()
+    if ((cur + ' ' + w).trim().length > 12 && cur) {
+      lines.push(cur)
+      cur = w
+    } else {
+      cur = (cur + ' ' + w).trim()
+    }
   })
   if (cur) lines.push(cur)
-  const lh = 12
+
+  // Alineación según posición en el círculo
+  const normA = ((midA % (Math.PI * 2)) + Math.PI * 2) % (Math.PI * 2)
+  let align
+  if (normA < Math.PI * 0.15 || normA > Math.PI * 1.85) {
+    align = 'center' // arriba
+  } else if (normA < Math.PI * 0.85) {
+    align = 'left'   // derecha
+  } else if (normA < Math.PI * 1.15) {
+    align = 'center' // abajo
+  } else {
+    align = 'right'  // izquierda
+  }
+
+  ctx.font = '500 10px "Times New Roman", serif'
+  ctx.fillStyle = '#c8c6e0'
+  ctx.textAlign = align
+  ctx.textBaseline = 'middle'
+
+  const lh = 13
   const off = -(lines.length - 1) * lh / 2
-  lines.forEach((ln, i) => ctx.fillText(ln, 0, off + i * lh))
-  ctx.restore()
+  lines.forEach((ln, i) => {
+    ctx.fillText(ln, lx, ly + off + i * lh)
+  })
 }
 
 function drawSlice(ctx, cx, cy, R, innerR, a1, a2, v) {
@@ -175,11 +191,19 @@ function drawDesempenios(ctx, cx, cy, R, innerR, scores) {
         ctx.save()
         ctx.translate(cx + Math.cos(midA) * lr, cy + Math.sin(midA) * lr)
         ctx.rotate(midA + Math.PI / 2)
-        ctx.font = '500 9px "Times New Roman", serif'
+
+        // Etiqueta D1/D2/D3
+        ctx.font = '500 8px "Times New Roman", serif'
         ctx.fillStyle = 'rgba(255,255,255,0.9)'
         ctx.textAlign = 'center'
         ctx.textBaseline = 'middle'
-        ctx.fillText('D' + (di + 1), 0, 0)
+        ctx.fillText('D' + (di + 1), 0, -6)
+
+        // Valor numérico
+        ctx.font = '700 10px "Times New Roman", serif'
+        ctx.fillStyle = 'rgba(255,255,255,0.95)'
+        ctx.fillText(fmtVal(v), 0, 5)
+
         ctx.restore()
       }
     }
