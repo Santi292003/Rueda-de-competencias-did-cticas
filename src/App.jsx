@@ -14,6 +14,8 @@ import { ITEM_MAP } from './data/itemMap.js'
 import PrintHeader from './components/PrintHeader.jsx'
 import InstructionsModal from './components/InstructionsModal.jsx'
 import { useEffect } from 'react'
+import Spinner from './components/Spinner.jsx'
+import ValidationReport from './components/ValidationReport.jsx'
 
 export default function App() {
   const csv = useCsvData()
@@ -72,6 +74,12 @@ export default function App() {
     URL.revokeObjectURL(url)
 }
 
+const hasActiveFilters =
+  scores.selectedFacultad !== '' ||
+  scores.selectedPrograma !== '' ||
+  scores.selectedDocente !== null ||
+  Object.values(scores.activeFilters).some(v => v.length > 0)
+
   return (
     <div style={{ padding: '24px', maxWidth: '1200px', margin: '0 auto' }}>
 
@@ -128,10 +136,11 @@ export default function App() {
         <span style={{ fontSize: '12px', fontWeight: '500', color: 'var(--text-secondary)' }}>
           Cargar datos:
         </span>
+
         <div
-          onClick={() => document.getElementById('csv-input').click()}
-          onDragOver={e => e.preventDefault()}
-          onDrop={handleDrop}
+          onClick={() => !csv.isLoaded && document.getElementById('csv-input').click()}
+          onDragOver={e => { if (!csv.isLoaded) e.preventDefault() }}
+          onDrop={e => { if (!csv.isLoaded) handleDrop(e) }}
           style={{
             flex: 1,
             minWidth: '180px',
@@ -141,7 +150,7 @@ export default function App() {
             display: 'flex',
             alignItems: 'center',
             gap: '9px',
-            cursor: 'pointer',
+            cursor: csv.isLoaded ? 'default' : 'pointer',
             fontSize: '12px',
             color: csv.isLoaded ? 'var(--s5)' : 'var(--text-muted)',
           }}
@@ -158,12 +167,57 @@ export default function App() {
             style={{ display: 'none' }}
           />
         </div>
-        {csv.error && (
-          <p style={{ color: 'var(--s1)', fontSize: '12px', width: '100%' }}>❌ {csv.error}</p>
+
+        {/* Botón cambiar archivo */}
+        {csv.isLoaded && (
+          <button
+            onClick={() => {
+              csv.reset()
+              scores.resetAll()
+              const input = document.getElementById('csv-input')
+              if (input) input.value = ''
+            }}
+            style={{
+              fontFamily: 'inherit',
+              fontSize: '11px',
+              fontWeight: '500',
+              padding: '7px 12px',
+              background: 'transparent',
+              color: 'var(--text-muted)',
+              border: '1px solid var(--border)',
+              borderRadius: '7px',
+              cursor: 'pointer',
+              whiteSpace: 'nowrap',
+              transition: 'color .15s, border-color .15s',
+            }}
+            onMouseEnter={e => {
+              e.currentTarget.style.color = 'var(--s1)'
+              e.currentTarget.style.borderColor = 'var(--s1)'
+            }}
+            onMouseLeave={e => {
+              e.currentTarget.style.color = 'var(--text-muted)'
+              e.currentTarget.style.borderColor = 'var(--border)'
+            }}
+          >
+            ✕ Cambiar archivo
+          </button>
         )}
-        {csv.warnings.map((w, i) => (
-          <p key={i} style={{ color: 'var(--s2)', fontSize: '12px', width: '100%' }}>⚠️ {w}</p>
-        ))}
+        {csv.isLoading && (
+          <Spinner message="Cargando y procesando el archivo..." />
+        )}
+
+        {/* Reporte de validación */}
+        {!csv.isLoading && (csv.error || csv.validationDetail) && (
+          <div style={{ width: '100%' }}>
+            {csv.error && csv.error !== '__META__' && (
+              <p style={{ color: 'var(--s1)', fontSize: '12px' }}>❌ {csv.error}</p>
+            )}
+            <ValidationReport
+              detail={csv.validationDetail}
+              fileName={csv.fileName}
+            />
+          </div>
+        )}
       </div>
 
       {/* Contenido — bienvenida o dashboard */}
@@ -206,7 +260,12 @@ export default function App() {
               <div className="no-print">
                 <WheelToggle mode={wheelMode} onChange={setWheelMode} />
               </div>
-              <Wheel scores={scores.scores} mode={wheelMode} centerLabel={scores.contextLabel} />
+              <Wheel
+                scores={scores.scores}
+                mode={wheelMode}
+                centerLabel={scores.contextLabel}
+                hasActiveFilters={hasActiveFilters}
+              />
               <WheelLegend />
             </div>
             <ScoreCards scores={scores.scores} mode={wheelMode} />

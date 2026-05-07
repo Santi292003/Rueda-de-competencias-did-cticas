@@ -36,6 +36,10 @@ body {
   display: none;
 }
 
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
 @media print {
   * {
     -webkit-print-color-adjust: exact !important;

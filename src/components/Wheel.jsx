@@ -260,8 +260,72 @@ function drawDimensiones(ctx, cx, cy, R, innerR, scores) {
   }
 }
 
+function drawFilterIndicator(ctx, cx, cy, R) {
+  // Arco exterior pulsante — se dibuja como un anillo fino de acento
+  const r = R + 10
+  ctx.beginPath()
+  ctx.arc(cx, cy, r, 0, Math.PI * 2)
+  ctx.strokeStyle = 'rgba(0, 180, 221, 0.6)'
+  ctx.lineWidth = 2.5
+  ctx.setLineDash([6, 4])
+  ctx.stroke()
+  ctx.setLineDash([]) // resetear para no afectar otros trazos
+
+  // Etiqueta en la parte superior
+  ctx.font = '500 10px "Times New Roman", serif'
+  ctx.fillStyle = 'rgba(0, 180, 221, 0.85)'
+  ctx.textAlign = 'center'
+  ctx.textBaseline = 'middle'
+  ctx.fillText('Filtros activos', cx, cy - R - 22)
+}
+
+function getHoveredSegment(x, y, cx, cy, R, innerR, scores, mode) {
+  const dx = x - cx
+  const dy = y - cy
+  const dist = Math.sqrt(dx * dx + dy * dy)
+
+  if (dist < innerR || dist > R) return null
+
+  let angle = Math.atan2(dy, dx)
+  const startAngle = -Math.PI / 2
+  angle = ((angle - startAngle) + Math.PI * 2) % (Math.PI * 2)
+
+  if (mode === 'dimensiones') {
+    const N = DIMENSIONS.length
+    const sliceAngle = (Math.PI * 2) / N
+    const ci = Math.floor(angle / sliceAngle)
+    if (ci < 0 || ci >= N) return null
+    const v = calcDimAvg(scores, ci)
+    if (v === null) return null
+    const outerR = innerR + (R - innerR) * scoreFrac(v)
+    if (dist > outerR) return null
+    return {
+      label: DIMENSIONS[ci].name,
+      sub: 'Promedio dimension',
+      value: v,
+    }
+  } else {
+    const N = DIMENSIONS.length
+    const D = 3
+    const sliceAngle = (Math.PI * 2) / (N * D)
+    const si = Math.floor(angle / sliceAngle)
+    const ci = Math.floor(si / D)
+    const di = si % D
+    if (ci < 0 || ci >= N) return null
+    const v = scores[ci]?.[di]
+    if (v === null || v === undefined) return null
+    const outerR = innerR + (R - innerR) * scoreFrac(v)
+    if (dist > outerR) return null
+    return {
+      label: DIMENSIONS[ci].name,
+      sub: `Desempeño D${di + 1}`,
+      value: v,
+    }
+  }
+}
+
 // ── Componente ─────────────────────────────────────────────────────────────
-export default function Wheel({ scores, mode = 'desempenios', centerLabel = '' }) {
+export default function Wheel({ scores, mode = 'desempenios', centerLabel = '', hasActiveFilters = false }) {
   const canvasRef = useRef(null)
 
   // Refs para animación
@@ -270,6 +334,8 @@ export default function Wheel({ scores, mode = 'desempenios', centerLabel = '' }
   const toScores = useRef(scores)
   const startTime = useRef(null)
   const prevMode = useRef(mode)
+  const tooltipRef = useRef(null)
+  const hoveredRef = useRef(null)
 
   useEffect(() => {
     // Cancelar animación anterior si existe
@@ -308,6 +374,11 @@ export default function Wheel({ scores, mode = 'desempenios', centerLabel = '' }
       } else {
         drawDesempenios(ctx, cx, cy, R, innerR, interpolated)
       }
+      if (hasActiveFilters) {
+        drawFilterIndicator(ctx, cx, cy, R)
+      }
+
+      drawCenter(ctx, cx, cy, innerR, centerLabel)
 
       drawCenter(ctx, cx, cy, innerR, centerLabel)
 
@@ -327,11 +398,69 @@ export default function Wheel({ scores, mode = 'desempenios', centerLabel = '' }
   }, [scores, mode, centerLabel])
 
   return (
-    <canvas
-      ref={canvasRef}
-      width={580}
-      height={580}
-      style={{ display: 'block', width: '580px', height: '580px' }}
-    />
+    <div style={{ position: 'relative', display: 'inline-block' }}>
+      <canvas
+        ref={canvasRef}
+        width={580}
+        height={580}
+        style={{ display: 'block', width: '580px', height: '580px', cursor: 'crosshair' }}
+        onMouseMove={e => {
+          const canvas = canvasRef.current
+          if (!canvas) return
+          const rect = canvas.getBoundingClientRect()
+          const scaleX = canvas.width / rect.width
+          const scaleY = canvas.height / rect.height
+          const x = (e.clientX - rect.left) * scaleX
+          const y = (e.clientY - rect.top) * scaleY
+          const cx = canvas.width / 2
+          const cy = canvas.height / 2
+
+          const segment = getHoveredSegment(x, y, cx, cy, 222, 22, toScores.current, mode)
+          const tooltip = tooltipRef.current
+          if (!tooltip) return
+
+          if (segment) {
+            const color = scoreColor(segment.value)
+            tooltip.innerHTML = `
+              <div style="font-size:11px;color:#8ab0cc;margin-bottom:3px">${segment.sub}</div>
+              <div style="font-size:13px;font-weight:600;color:#f0f4f8;margin-bottom:6px">${segment.label}</div>
+              <div style="display:flex;align-items:center;gap:8px">
+                <span style="width:10px;height:10px;border-radius:50%;background:${color};display:inline-block;flex-shrink:0"></span>
+                <span style="font-size:18px;font-weight:700;color:${color}">${fmtVal(segment.value)}</span>
+              </div>
+            `
+            tooltip.style.display = 'block'
+            const containerRect = canvas.parentElement.getBoundingClientRect()
+            let tx = e.clientX - containerRect.left + 14
+            let ty = e.clientY - containerRect.top - 10
+            if (tx + 170 > containerRect.width) tx = tx - 184
+            if (ty + 90 > containerRect.height) ty = ty - 90
+            tooltip.style.left = tx + 'px'
+            tooltip.style.top = ty + 'px'
+          } else {
+            tooltip.style.display = 'none'
+          }
+        }}
+        onMouseLeave={() => {
+          if (tooltipRef.current) tooltipRef.current.style.display = 'none'
+        }}
+      />
+
+      <div
+        ref={tooltipRef}
+        style={{
+          display: 'none',
+          position: 'absolute',
+          pointerEvents: 'none',
+          background: '#022a47',
+          border: '1px solid #004d8a',
+          borderRadius: '8px',
+          padding: '10px 14px',
+          minWidth: '160px',
+          boxShadow: '0 4px 16px rgba(0,0,0,0.4)',
+          zIndex: 10,
+        }}
+      />
+    </div>
   )
 }
